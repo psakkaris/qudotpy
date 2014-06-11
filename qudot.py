@@ -26,6 +26,20 @@ class QuBaseState(object):
         """The Hermitian Conjugate of the state a.k.a row vector"""
         return np.conjugate(self._state.T)
 
+    def __eq__(self, other):
+        """Considered equal if all elements of a state are within threshold"""
+        #TODO: choose and configure project wide tolerance value
+        equal = False
+        if hasattr(other, "state"):
+            equal = np.allclose(self.state, other.state)
+
+        return equal
+
+    def __ne__(self, other):
+        """Logically opposite of __eq__"""
+        #TODO: choose and configure project wide tolerance value
+        return not self.__eq__(other)
+
 
 
 class QuBit(QuBaseState):
@@ -371,6 +385,7 @@ class QuGate(object):
         if multiplier > 0:
             self._matrix = self._matrix * multiplier
 
+        #TODO: choose and configure project wide tolerance value
         is_unitary = np.allclose((self._matrix.H * self._matrix).real,
             np.eye(shape[0]))
         if not is_unitary:
