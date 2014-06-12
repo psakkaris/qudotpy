@@ -3,8 +3,8 @@ __author__ = 'psakkaris'
 import numpy as np
 import math
 import random
-import qu_utils
-import exceptions
+import qudot_utils
+import qudot_errors
 
 class QuBaseState(object):
     """Common properties of quantum states.
@@ -92,7 +92,7 @@ class QuBit(QuBaseState):
         else:
             message = ("A qubit must be one of the strings %s, %s, %s or %s"
                        % (QuBit.ZERO, QuBit.ONE, QuBit.PLUS, QuBit.MINUS))
-            raise exceptions.InvalidQuBitError(message)
+            raise qudot_errors.InvalidQuBitError(message)
 
         self._state_str = qubit_str
 
@@ -159,7 +159,7 @@ class QuState(QuBaseState):
             message = ("you must provide a map with your states as keys and"
                        "and amplitudes as values. "
                        "Ex: {\"00\":1/sqrt(2), \"11\":.5/sqrt(2)}")
-            raise exceptions.InvalidQuStateError(message)
+            raise qudot_errors.InvalidQuStateError(message)
 
     @classmethod
     def init_from_state_list(cls, state_list):
@@ -237,7 +237,7 @@ class QuState(QuBaseState):
             i = 0
             for element in vector:
                 if element:
-                    bit_str = qu_utils.int_to_bit_str(i, dimensionality)
+                    bit_str = qudot_utils.int_to_bit_str(i, dimensionality)
                     state_map[bit_str] = element[0]
                 i += 1
 
@@ -252,7 +252,7 @@ class QuState(QuBaseState):
                 if my_str:
                     my_str.append(" + ")
                 my_str.append(str(element[0]))
-                bit_str = qu_utils.int_to_dirac_str(
+                bit_str = qudot_utils.int_to_dirac_str(
                     index,
                     self._hilbert_dimension)
                 my_str.append(bit_str)
@@ -261,7 +261,7 @@ class QuState(QuBaseState):
 
     def _collapse(self, state_str):
         """collapses the state to the specified state_str"""
-        state_index = qu_utils.dirac_str_to_int(state_str)
+        state_index = qudot_utils.dirac_str_to_int(state_str)
         index = 0
         for element in self._state:
             if index == state_index:
@@ -293,7 +293,7 @@ class QuState(QuBaseState):
         for element in self.state:
             if element:
                 probablility = measurement_probability(element[0])
-                dirac_str = qu_utils.int_to_dirac_str(
+                dirac_str = qudot_utils.int_to_dirac_str(
                     index,
                     self._hilbert_dimension)
                 states_map[dirac_str] = probablility
@@ -305,7 +305,7 @@ class QuState(QuBaseState):
                                  str(qubit_index))
             qubit_map = {}
             for dirac_state in states_map:
-                state_index = qu_utils.dirac_str_to_int(dirac_state)
+                state_index = qudot_utils.dirac_str_to_int(dirac_state)
                 amplitude = self._state[state_index][0]
                 qubit = dirac_state[qubit_index]
                 probablility = measurement_probability(amplitude)
@@ -380,7 +380,7 @@ class QuGate(object):
         self._matrix = np.matrix(matrix_str, dtype='complex')
         shape = self._matrix.shape
         if shape[0] != shape[1]:
-            raise exceptions.InvalidQuGateError("Gate is not a square matrix")
+            raise qudot_errors.InvalidQuGateError("Gate is not a square matrix")
 
         if multiplier > 0:
             self._matrix = self._matrix * multiplier
@@ -389,7 +389,7 @@ class QuGate(object):
         is_unitary = np.allclose((self._matrix.H * self._matrix).real,
             np.eye(shape[0]))
         if not is_unitary:
-            raise exceptions.InvalidQuGateError("Gate is not unitary")
+            raise qudot_errors.InvalidQuGateError("Gate is not unitary")
 
 
 #######################################################################
