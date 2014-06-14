@@ -212,9 +212,9 @@ class QuState(QuBaseState):
 
     @classmethod
     def init_from_vector(cls, vector):
-        """Create a QuState from a vector.
+        """Create a QuState from a column vector.
 
-        This method will create a QuState given a raw vector as input.
+        This method will create a QuState given a raw column vector as input.
         Example: [[.707],
                   [0],
                   [0],
@@ -307,7 +307,7 @@ class QuState(QuBaseState):
             for dirac_state in states_map:
                 state_index = qudot_utils.dirac_str_to_int(dirac_state)
                 amplitude = self._state[state_index][0]
-                qubit = dirac_state[qubit_index]
+                qubit = qudot_utils.DIRAC_STR % dirac_state[qubit_index]
                 probablility = measurement_probability(amplitude)
                 if qubit_map.has_key(qubit):
                     old_probability = qubit_map[qubit]
