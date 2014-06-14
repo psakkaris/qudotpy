@@ -7,7 +7,7 @@ import qudot_utils
 import numpy
 import math
 
-ONE_OVER_SQRT_2 = .707106
+ONE_OVER_SQRT_2 = 1 / math.sqrt(2)
 
 def get_column_vector(element_list):
     return numpy.array([element_list]).T
@@ -239,12 +239,36 @@ class QuStateTest(unittest.TestCase):
         self.assertNotEqual(test_state2, self.test_state)
 
 
-class QuGateTest(unittest.TestCase):
-    pass
-
 # Module Level test cases
 class QuDotTest(unittest.TestCase):
-    pass
+
+    def test_gate_operations(self):
+        result = qudot.apply_gate(qudot.X, qudot.ZERO)
+        self.assertEqual(result, qudot.ONE)
+
+        result = qudot.apply_gate(qudot.X, qudot.ONE)
+        self.assertEqual(result, qudot.ZERO)
+
+        result = qudot.apply_gate(qudot.X, qudot.PLUS)
+        self.assertEqual(result, qudot.PLUS)
+
+        result = qudot.apply_gate(qudot.Z, qudot.ZERO)
+        self.assertEqual(result, qudot.ZERO)
+
+        result = qudot.apply_gate(qudot.Z, qudot.ONE)
+        self.assertTrue(vectors_equal(result.state, qudot.ONE.state * (-1)))
+
+        result = qudot.apply_gate(qudot.H, qudot.ZERO)
+        self.assertEqual(result, qudot.PLUS)
+
+        result = qudot.apply_gate(qudot.H, qudot.ONE)
+        self.assertEqual(result, qudot.MINUS)
+
+        result = qudot.apply_gate(qudot.H, qudot.PLUS)
+        self.assertEqual(result, qudot.ZERO)
+
+        result = qudot.apply_gate(qudot.H, qudot.MINUS)
+        self.assertEqual(result, qudot.ONE)
 
 
 if __name__ == "__main__":
