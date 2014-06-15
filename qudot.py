@@ -122,6 +122,11 @@ class QuState(QuBaseState):
         """The dimensionality of the associated Hilbert space"""
         return self._hilbert_dimension
 
+    @property
+    def num_qubits(self):
+        """The number of qubits needed to represent the QuState"""
+        return self._num_qubits
+
     def __init__(self, state_map):
         """Create a QuState from a map.
 
@@ -154,7 +159,8 @@ class QuState(QuBaseState):
                 else:
                     self._state = (tmp * amplitude)
 
-                self._hilbert_dimension = int(math.log(self._state.size, 2))
+                self._num_qubits = int(math.log(self._state.size, 2))
+                self._hilbert_dimension = self._state.size
         else:
             message = ("you must provide a map with your states as keys and"
                        "and amplitudes as values. "
@@ -254,7 +260,7 @@ class QuState(QuBaseState):
                 my_str.append(str(element[0]))
                 bit_str = qudot_utils.int_to_dirac_str(
                     index,
-                    self._hilbert_dimension)
+                    self._num_qubits)
                 my_str.append(bit_str)
             index += 1
         return "".join(my_str)
@@ -295,12 +301,12 @@ class QuState(QuBaseState):
                 probablility = measurement_probability(element[0])
                 dirac_str = qudot_utils.int_to_dirac_str(
                     index,
-                    self._hilbert_dimension)
+                    self._num_qubits)
                 states_map[dirac_str] = probablility
             index += 1
 
         if qubit_index >= 0:
-            if qubit_index > self._hilbert_dimension:
+            if qubit_index > self._num_qubits:
                 raise ValueError("qubit_index=%s is out of range" %
                                  str(qubit_index))
             qubit_map = {}

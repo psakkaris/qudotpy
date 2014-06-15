@@ -135,7 +135,8 @@ class QuStateTest(unittest.TestCase):
         row_vector = get_row_vector(self.adj_vector)
         self.assertTrue(vectors_equal(column_vector, qu_state.state))
         self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
-        self.assertTrue(4 == qu_state.hilbert_dimension)
+        self.assertTrue(4 == qu_state.num_qubits)
+        self.assertTrue(2**4 == qu_state.hilbert_dimension)
 
     def test_init_from_list(self):
         self.assertRaises(qudot_errors.InvalidQuStateError,
@@ -149,11 +150,13 @@ class QuStateTest(unittest.TestCase):
         row_vector = get_row_vector(self.base_vector_real)
         self.assertTrue(vectors_equal(column_vector, qu_state.state))
         self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
-        self.assertTrue(4 == qu_state.hilbert_dimension)
+        self.assertTrue(4 == qu_state.num_qubits)
+        self.assertTrue(2**4 == qu_state.hilbert_dimension)
 
     def test_init_superposition(self):
         qu_state = qudot.QuState.init_superposition(4)
-        self.assertTrue(4 == qu_state.hilbert_dimension)
+        self.assertTrue(2**4 == qu_state.hilbert_dimension)
+        self.assertTrue(4 == qu_state.num_qubits)
 
         amplitude = .25
         vector = []
@@ -173,7 +176,8 @@ class QuStateTest(unittest.TestCase):
         self.assertRaises(ValueError,
                           lambda : qudot.QuState.init_from_vector(row_vector))
         qu_state = qudot.QuState.init_from_vector(column_vector)
-        self.assertTrue(qu_state.hilbert_dimension == 2)
+        self.assertTrue(qu_state.num_qubits == 2)
+        self.assertTrue(qu_state.hilbert_dimension == 2**2)
         self.assertTrue(vectors_equal(column_vector,qu_state.state))
         self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
 
