@@ -289,7 +289,30 @@ class QuGateTest(unittest.TestCase):
 
 
     def test_init_from_tensor_product(self):
-        pass
+        X_X = qudot.QuGate.init_from_str("0 0 0 1;"
+                                         "0 0 1 0;"
+                                         "0 1 0 0;"
+                                         "1 0 0 0")
+
+        X_Z = qudot.QuGate.init_from_str("0 0 1 0;"
+                                         "0 0 0 -1;"
+                                         "1 0 0 0;"
+                                         "0 -1 0 0")
+
+        H_H = qudot.QuGate.init_from_str("1 1 1 1;"
+                                         "1 -1 1 -1;"
+                                         "1 1 -1 -1;"
+                                         "1 -1 -1 1",
+                                         multiplier=0.5)
+
+        gates = [qudot.X, qudot.X]
+        self.assertEqual(X_X, qudot.QuGate.init_from_tensor_product(gates))
+
+        gates = [qudot.X, qudot.Z]
+        self.assertEqual(X_Z, qudot.QuGate.init_from_tensor_product(gates))
+
+        gates = [qudot.H, qudot.H]
+        self.assertEqual(H_H, qudot.QuGate.init_from_tensor_product(gates))
 
 
 # Module Level test cases

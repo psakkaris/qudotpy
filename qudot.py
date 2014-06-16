@@ -465,8 +465,24 @@ class QuGate(object):
 
     @classmethod
     def init_from_tensor_product(cls, qu_gates):
+        """ Create a quantum gate by the tensor product of other gates
+
+        The tensor product will be done from left to right starting zeroth
+        element of the qu_gates list. For example:
+        qu_gates = [H, X, H] will be H tensor X tensor H
+
+        Args:
+            qu_gates: a list of QuGates to tensor
+
+        Raises:
+            InvalidQuGateError: if the result is not unitary
+        """
         if qu_gates:
-            raise NotImplementedError
+            matrix = qu_gates[0].matrix
+            for i in range(1, len(qu_gates)):
+                matrix = np.kron(matrix, qu_gates[i].matrix)
+
+            return QuGate(matrix)
         else:
             raise qudot_errors.InvalidQuGateError("No gates specified")
 
