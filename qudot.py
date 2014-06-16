@@ -506,9 +506,15 @@ def apply_gate(qu_gate, base_state):
     result = np.asarray(qu_gate.matrix * base_state.state)
     return QuState.init_from_vector(result)
 
-def tensor_product(left, right):
-    """Return the tensor product as left tensor right"""
-    return np.kron(left, right)
+def tensor_gates(left_gate, right_gate):
+    """Return the tensor product of two QuGates """
+    new_matrix = np.kron(left_gate.matrix, right_gate.matrix)
+    return QuGate(new_matrix)
+
+def tensor_states(left_state, right_state):
+    """Return the tensor product of two quantum states """
+    new_state = np.kron(left_state.state, right_state.state)
+    return QuState.init_from_vector(new_state)
 
 
 #######################################################################
