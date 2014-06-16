@@ -357,8 +357,9 @@ class QuGate(object):
 
     Attributes:
         matrix: the matrix representation of the gate
-        dagger: the hermitian (dagger) of the gate
+        dagger: the Hermitian (dagger) of the gate
     """
+
     @property
     def matrix(self):
         return self._matrix
@@ -367,7 +368,54 @@ class QuGate(object):
     def dagger(self):
         return self._matrix.H
 
-    def __init__(self, matrix_str, multiplier=-1):
+    def __eq__(self, other):
+        """Returns true if all matrix elements of other are close """
+        #TODO: choose and configure project wide tolerance value
+        equals = False
+        if hasattr(other, "matrix"):
+            equals = np.allclose(self.matrix, other.matrix)
+
+        return equals
+
+    def __ne__(self, other):
+        """Logically opposite of __eq__(other) """
+        return not self.__eq__(other)
+
+    def __init__(self, matrix, multiplier=-1):
+        """Create a quantum gate from a numpy matrix.
+
+        Note that if the matrix dtype is not complex it will be converted
+        to a complex matrix.
+
+        Args:
+            matrix: a complex typed numpy matrix
+            multiplier: if supplied all the elements of the matrix will
+                        be multiplied by the multiplier
+
+        Raises:
+            InvalidQuGateError: if the gate is not unitary
+        """
+
+        if matrix.dtype == np.dtype('complex'):
+            self._matrix = matrix
+        else:
+            self._matrix = matrix.astype('complex')
+
+        shape = self._matrix.shape
+        if shape[0] != shape[1]:
+            raise qudot_errors.InvalidQuGateError("Gate is not a square matrix")
+
+        if multiplier > 0:
+            self._matrix = self._matrix * multiplier
+
+        #TODO: choose and configure project wide tolerance value
+        is_unitary = np.allclose((self._matrix.H * self._matrix).real,
+            np.eye(shape[0]))
+        if not is_unitary:
+            raise qudot_errors.InvalidQuGateError("Gate is not unitary")
+
+    @classmethod
+    def init_from_str(cls, matrix_str, multiplier=-1):
         """Create a quantum gate from a string.
 
         The string of the quantum gate should be rows separated by
@@ -383,20 +431,44 @@ class QuGate(object):
         Raises:
             InvalidQuGateError: if the gate is not unitary
         """
-        self._matrix = np.matrix(matrix_str, dtype='complex')
-        shape = self._matrix.shape
-        if shape[0] != shape[1]:
-            raise qudot_errors.InvalidQuGateError("Gate is not a square matrix")
+        matrix = np.matrix(matrix_str, dtype='complex')
+        return QuGate(matrix, multiplier)
 
-        if multiplier > 0:
-            self._matrix = self._matrix * multiplier
+    @classmethod
+    def init_from_mul(cls, qu_gates):
+        """ Create a quantum gate by multiplying existing gates
 
-        #TODO: choose and configure project wide tolerance value
-        is_unitary = np.allclose((self._matrix.H * self._matrix).real,
-            np.eye(shape[0]))
-        if not is_unitary:
-            raise qudot_errors.InvalidQuGateError("Gate is not unitary")
+        The multiplication will be done from left to right starting zeroth
+        element of the qu_gates list. For example:
+        qu_gates = [H, X, H] will be H * X * H
 
+        Args:
+            qu_gates: a list of QuGates to multiply
+
+        Raises:
+            InvalidQuGateError: if the result of the multiplication is
+                                not unitary or if the shape of the
+                                matrices does not match
+        """
+        if qu_gates:
+            matrix = qu_gates[0].matrix
+            for i in range(1, len(qu_gates)):
+                if matrix.shape != qu_gates[i].matrix.shape:
+                    message = "The matrices supplied have different shapes"
+                    raise qudot_errors.InvalidQuGateError(message)
+
+                matrix = matrix * qu_gates[i].matrix
+
+            return QuGate(matrix)
+        else:
+            raise qudot_errors.InvalidQuGateError("No gates specified")
+
+    @classmethod
+    def init_from_tensor_product(cls, qu_gates):
+        if qu_gates:
+            raise NotImplementedError
+        else:
+            raise qudot_errors.InvalidQuGateError("No gates specified")
 
 #######################################################################
 
@@ -434,6 +506,10 @@ def apply_gate(qu_gate, base_state):
     result = np.asarray(qu_gate.matrix * base_state.state)
     return QuState.init_from_vector(result)
 
+def tensor_product(left, right):
+    """Return the tensor product as left tensor right"""
+    return np.kron(left, right)
+
 
 #######################################################################
 # Module constants ####################################################
@@ -448,7 +524,8 @@ QUBIT_MAP = {QuBit.ZERO: ZERO, QuBit.ONE: ONE,
              QuBit.PLUS: PLUS, QuBit.MINUS: MINUS}
 
 # simple/common gates
-X = QuGate('0 1; 1 0')
-Y = QuGate('0 1j; -1j 0')
-Z = QuGate('1 0; 0 -1')
-H = QuGate('1 1; 1 -1', 1/math.sqrt(2))
+X = QuGate.init_from_str('0 1; 1 0')
+Y = QuGate.init_from_str('0 -1j; 1j 0')
+Z = QuGate.init_from_str('1 0; 0 -1')
+H = QuGate.init_from_str('1 1; 1 -1', 1/math.sqrt(2))
+CNOT = QuGate.init_from_str('1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0')

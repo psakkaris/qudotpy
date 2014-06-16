@@ -243,6 +243,55 @@ class QuStateTest(unittest.TestCase):
         self.assertNotEqual(test_state2, self.test_state)
 
 
+class QuGateTest(unittest.TestCase):
+
+    def test_equals(self):
+        self.assertTrue(qudot.X == qudot.X)
+        self.assertTrue(qudot.Z == qudot.Z)
+        self.assertTrue(qudot.Y == qudot.Y)
+        self.assertTrue(qudot.H == qudot.H)
+        self.assertTrue(qudot.X != qudot.Y)
+        self.assertTrue(qudot.Y != qudot.X)
+        self.assertTrue(qudot.H != qudot.Z)
+        self.assertTrue(qudot.Y != qudot.Z)
+
+    def test_init_from_str(self):
+        self.assertTrue(qudot.X == qudot.QuGate.init_from_str("0 1; 1 0"))
+        self.assertTrue(qudot.Y != qudot.QuGate.init_from_str("1 0;0 -1 "))
+        self.assertTrue(qudot.H == qudot.QuGate.init_from_str(
+            "1 1; 1 -1", 1/math.sqrt(2)))
+        # not square matrix
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_from_str("1 0 0; 0 1 0"))
+        # not unitary
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_from_str("1 1; 1 -1"))
+
+    def test_init_from_multiplication(self):
+        # use well known quantum circuit identities for test
+        # see Nielsan & Chang pg 177
+        qu_gates = [qudot.H, qudot.X, qudot.H]
+        self.assertEqual(qudot.Z, qudot.QuGate.init_from_mul(qu_gates))
+
+        qu_gates = [qudot.H, qudot.Z, qudot.H]
+        self.assertEqual(qudot.X, qudot.QuGate.init_from_mul(qu_gates))
+
+        qu_gates = [qudot.H, qudot.Y, qudot.H]
+        minus_Y = qudot.QuGate.init_from_str('0 1j; -1j 0')
+        self.assertEqual(minus_Y, qudot.QuGate.init_from_mul(qu_gates))
+
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_from_mul([]))
+
+        qu_gates = [qudot.X, qudot.CNOT]
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_from_mul(qu_gates))
+
+
+    def test_init_from_tensor_product(self):
+        pass
+
+
 # Module Level test cases
 class QuDotTest(unittest.TestCase):
 
