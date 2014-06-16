@@ -181,6 +181,13 @@ class QuStateTest(unittest.TestCase):
         self.assertTrue(vectors_equal(column_vector,qu_state.state))
         self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
 
+    def test_init_zeros(self):
+        self.assertTrue(str(qudot.QuState.init_zeros(2)), "1|00>")
+        self.assertTrue(str(qudot.QuState.init_zeros(3)), "1|000>")
+        self.assertTrue(str(qudot.QuState.init_zeros(4)), "1|0000>")
+        self.assertTrue(str(qudot.QuState.init_zeros(6)), "1|000000>")
+        self.assertTrue(str(qudot.QuState.init_zeros(9)), "1|000000000>")
+
     def test_str(self):
         vector = [0.707, 0, 0, 0.707]
         column_vector = get_column_vector(vector)

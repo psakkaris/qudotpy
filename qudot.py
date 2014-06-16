@@ -249,6 +249,17 @@ class QuState(QuBaseState):
 
         return cls(state_map)
 
+    @classmethod
+    def init_zeros(cls, num_bits):
+        """ Initialized a state with all zeros
+
+        examples: |00>, |00000000>, |000000000000000000000000>
+        Args:
+            num_bits: the number of zeros you want
+        """
+        bit_str = "0" * num_bits
+        return cls({bit_str: 1})
+
     def __str__(self):
         """Dirac notation of qubit """
         my_str = []
