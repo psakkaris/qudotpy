@@ -8,3 +8,6 @@ class InvalidQuStateError(Exception):
 
 class InvalidQuGateError(Exception):
     pass
+
+class QuCircuitError(Exception):
+    pass

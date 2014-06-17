@@ -383,8 +383,8 @@ class QuState(QuBaseState):
         if qubit_list:
             for qubit in qubit_list:
                 if qubit > self._num_qubits:
-                    raise ValueError("Cannot apply gate to qubit #%s. This state"
-                                     "only has %s qubits" %
+                    raise ValueError("Cannot apply gate to qubit #%s. "
+                                     "This state only has %s qubits" %
                                      (qubit, self._num_qubits))
 
                 eye_gate = QuGate(np.asmatrix(np.eye(2)))
@@ -546,6 +546,121 @@ class QuGate(object):
             return QuGate(matrix)
         else:
             raise qudot_errors.InvalidQuGateError("No gates specified")
+
+
+class QuCircuit(object):
+    """Representation of a quantum circuit and methods to run it.
+
+    QuCircuit represents a quantum circuit with a list of tuples that
+    represent operations (ops). The tuples have the form (QuGate, bit_list).
+    QuGate is the gate operation you
+    want performed and bit_list is the index of bits (starting from 1) that
+    you want the operation to be performed. If you specify 'None' as the
+    bit_list then the associated QuGate will be applied to the entire state.
+    Before running or stepping through a circuit you must set the input state
+    in the in_qu_state attribute or an error will be thrown
+
+    Attributes:
+        in_qu_state: The input QuState that you want to run the circuit on
+
+        step_op_index: If you are stepping through a circuit, this tell you
+                       your current index in the ops list
+    """
+
+    @property
+    def in_qu_state(self):
+        """Getter for the input QuState"""
+        return self._in_qu_state
+
+    @in_qu_state.setter
+    def in_qu_state(self, qu_state_value):
+        """Setter for the input QuState
+
+        Will raise a QuCircuitError if you try to set the input QuState while
+        stepping through a circuit
+        """
+        if self._step_op_index > 0:
+            message = "Trying to reset input QuState while stepping through" \
+                      " a circuit! You should reset_circuit() first."
+            raise qudot_errors.QuCircuitError(message)
+
+        self._in_qu_state = qu_state_value
+
+    @property
+    def step_op_index(self):
+        """Get which op you are on if stepping through a circuit. 0 based"""
+        return self._step_op_index
+
+    def __init__(self, ops):
+        """Initialize
+
+        Args:
+            ops: a list of tuples. Each tuple represents on operation on
+                 the circuit. The first element of the tuple is the QuGate
+                 you want applied. The second element is a list of bits
+                 you want the gate applied to. If the bit_list is None then
+                 the QuGate ill be applied to all bits.
+        """
+        if not ops:
+            message = "You must specify a list of tuples to define a" \
+                      " quantum circuit: [(QuGate, bit_list)]"
+            raise qudot_errors.QuCircuitError(message)
+
+        self.ops = ops
+        self._step_op_index = 0
+        self._in_qu_state = None
+
+    def run_circuit(self):
+        """Runs a complete cycle of the circuit
+
+        Make sure in_qu_state is set or this will raise an error
+
+        Returns:
+            The result of the input state after applying the circuit
+
+        Raises:
+            QuCircuitError: if no in_qu_state is set
+        """
+
+        if self._in_qu_state:
+            for op in self.ops:
+                self._in_qu_state.apply_gate(op[0], op[1])
+
+            return self._in_qu_state
+        else:
+            message = "An input QuState must be set to apply a circuit"
+            raise qudot_errors.QuCircuitError(message)
+
+    def step_circuit(self):
+        """Step through operations one at a time.
+
+        Make sure in_qu_state is set or this will raise an error.
+        Operation counting starts at 0
+
+        Returns:
+            int: The next index in the ops list or 0 if end of list
+
+        Raises:
+            QuCircuitError: if no in_qu_state is set
+        """
+        if self._in_qu_state:
+            op = self.ops[self._step_op_index]
+            self._in_qu_state.apply_gate(op[0], op[1])
+            self._step_op_index += 1
+            if self._step_op_index == len(self.ops):
+                self.reset_circuit()
+
+            return self._step_op_index
+        else:
+            message = "An input QuState must be set to step through a circuit" \
+                      "Set self.in_qu_state with the QuState you want to" \
+                      "step the circuit through."
+            raise qudot_errors.QuCircuitError(message)
+
+    def reset_circuit(self):
+        """Sets the step index back to 0"""
+        self._step_op_index = 0
+
 
 #######################################################################
 

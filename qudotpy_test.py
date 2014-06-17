@@ -337,6 +337,65 @@ class QuGateTest(unittest.TestCase):
         self.assertEqual(H_H, qudot.QuGate.init_from_tensor_product(gates))
 
 
+class QuCircuitTest(unittest.TestCase):
+
+    def setUp(self):
+        rt2 = 1 / math.sqrt(2)
+        self.phi_plus = qudot.QuState({"00": rt2, "11": rt2})
+        self.phi_minus = qudot.QuState({"00": rt2, "11": -rt2})
+        self.psi_plus = qudot.QuState({"01": rt2, "10": rt2})
+        self.psi_minus = qudot.QuState({"01": rt2, "10": -rt2})
+
+        self.bell_circuit = qudot.QuCircuit([(qudot.H, [1]),
+                                             (qudot.CNOT, None)])
+
+
+    def tearDown(self):
+        del self.phi_plus
+        del self.phi_minus
+        del self.psi_plus
+        del self.psi_minus
+        del self.bell_circuit
+
+    def test_run_circuit(self):
+        in_state = qudot.QuState.init_from_state_list(["00"])
+        self.bell_circuit.in_qu_state = in_state
+        self.assertEqual(self.bell_circuit.run_circuit(), self.phi_plus)
+
+        in_state = qudot.QuState.init_from_state_list(["10"])
+        self.bell_circuit.in_qu_state = in_state
+        self.assertEqual(self.bell_circuit.run_circuit(), self.phi_minus)
+
+        in_state = qudot.QuState.init_from_state_list(["01"])
+        self.bell_circuit.in_qu_state = in_state
+        self.assertEqual(self.bell_circuit.run_circuit(), self.psi_plus)
+
+        in_state = qudot.QuState.init_from_state_list(["11"])
+        self.bell_circuit.in_qu_state = in_state
+        self.assertEqual(self.bell_circuit.run_circuit(), self.psi_minus)
+
+        self.bell_circuit.in_qu_state = None
+        self.assertRaises(qudot_errors.QuCircuitError,
+                          lambda : self.bell_circuit.run_circuit())
+
+
+    def test_step_circuit(self):
+        rt2 = 1 / math.sqrt(2)
+        bell_step1 = qudot.QuState({"00": rt2, "10": rt2})
+        in_state = qudot.QuState.init_from_state_list(["00"])
+
+        self.assertRaises(qudot_errors.QuCircuitError,
+                          lambda : self.bell_circuit.step_circuit())
+
+        self.bell_circuit.in_qu_state = in_state
+        next_step = self.bell_circuit.step_circuit()
+        self.assertEqual(next_step, 1)
+        self.assertEqual(self.bell_circuit.in_qu_state, bell_step1)
+        next_step = self.bell_circuit.step_circuit()
+        self.assertEqual(next_step, 0)
+        self.assertEqual(self.bell_circuit.in_qu_state, self.phi_plus)
+
+
 # Module Level test cases
 class QuDotTest(unittest.TestCase):
 
