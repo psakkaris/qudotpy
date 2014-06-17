@@ -356,7 +356,7 @@ class QuState(QuBaseState):
                 return possibility
             start += probability
 
-    def apply_gate(self, qu_gate, qubit=-1):
+    def apply_gate(self, qu_gate, qubit_list=None):
         """ Apply a QuGate to the entire state or a qubit
 
         The supplied QuGate will be "scaled" to the appropriate dimension.
@@ -370,27 +370,29 @@ class QuState(QuBaseState):
 
         Args:
             qu_gate: the QuGate you want to apply
-            qubit: optional. Specifies the qubit index you want to apply
-                   the QuGate to. If not specified, the QuGate will be
-                   applied to the entire state
+            qubit: optional. Specifies a list of qubit index you want to
+                   apply the QuGate to. If not specified, the QuGate will
+                   be applied to the entire state
 
         Raise:
             ValueError: if you try to apply to an out of bounds qubit index
         """
+        if not qubit_list: qubit_list = []
         dimension = qu_gate.matrix.shape[0]
         qu_gate_list = []
-        if qubit > 0:
-            if qubit > self._num_qubits:
-                raise ValueError("Cannot apply gate to qubit #%s. This state"
-                                 "only has %s qubits" %
-                                 (qubit, self._num_qubits))
+        if qubit_list:
+            for qubit in qubit_list:
+                if qubit > self._num_qubits:
+                    raise ValueError("Cannot apply gate to qubit #%s. This state"
+                                     "only has %s qubits" %
+                                     (qubit, self._num_qubits))
 
-            eye_gate = QuGate(np.asmatrix(np.eye(2)))
-            for bit in range(1, self._num_qubits + 1):
-                if bit == qubit:
-                    qu_gate_list.append(qu_gate)
-                else:
-                    qu_gate_list.append(eye_gate)
+                eye_gate = QuGate(np.asmatrix(np.eye(2)))
+                for bit in range(1, self._num_qubits + 1):
+                    if bit == qubit:
+                        qu_gate_list.append(qu_gate)
+                    else:
+                        qu_gate_list.append(eye_gate)
         else:
             qu_gate_list.append(qu_gate)
             while dimension < self._hilbert_dimension:
