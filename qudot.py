@@ -356,8 +356,56 @@ class QuState(QuBaseState):
                 return possibility
             start += probability
 
-    def apply_gate(self, qu_gate):
-        raise NotImplementedError
+    def apply_gate(self, qu_gate, qubit=-1):
+        """ Apply a QuGate to the entire state or a qubit
+
+        The supplied QuGate will be "scaled" to the appropriate dimension.
+        For example lets say you have a state |0100> and you want to
+        apply the X gate to the entire state. Then you can pass in the
+        predefined qudot.X QuGate and it will be tensored with itself
+        until the dimension matches that of the state.
+        You can also specify a specific qubit you want to apply the gate to.
+        Qubit indexing starts from one, for example, the second qubit
+        of |0100> is 1.
+
+        Args:
+            qu_gate: the QuGate you want to apply
+            qubit: optional. Specifies the qubit index you want to apply
+                   the QuGate to. If not specified, the QuGate will be
+                   applied to the entire state
+
+        Raise:
+            ValueError: if you try to apply to an out of bounds qubit index
+        """
+        dimension = qu_gate.matrix.shape[0]
+        qu_gate_list = []
+        if qubit > 0:
+            if qubit > self._num_qubits:
+                raise ValueError("Cannot apply gate to qubit #%s. This state"
+                                 "only has %s qubits" %
+                                 (qubit, self._num_qubits))
+
+            eye_gate = QuGate(np.asmatrix(np.eye(2)))
+            for bit in range(1, self._num_qubits + 1):
+                if bit == qubit:
+                    qu_gate_list.append(qu_gate)
+                else:
+                    qu_gate_list.append(eye_gate)
+        else:
+            qu_gate_list.append(qu_gate)
+            while dimension < self._hilbert_dimension:
+                qu_gate_list.append(qu_gate)
+                dimension *= 2
+
+        final_gate = QuGate.init_from_tensor_product(qu_gate_list)
+        # make sure dimensions are same after this
+        if final_gate.matrix.shape[0] != self._hilbert_dimension:
+            raise RuntimeError("gate of dimension %s cannot be applied to"
+                               "state with dimension %s" %
+                               (final_gate.matrix.shape[0],
+                                self._hilbert_dimension))
+
+        self._state = np.asarray(final_gate.matrix * self._state)
 
 
 class QuGate(object):

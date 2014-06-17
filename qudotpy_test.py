@@ -249,6 +249,21 @@ class QuStateTest(unittest.TestCase):
         test_state2 = qudot.QuState.init_superposition(4)
         self.assertNotEqual(test_state2, self.test_state)
 
+    def test_apply_gate(self):
+        test_input = qudot.QuState.init_zeros(2)
+        output = qudot.QuState({"00": .5, "10": .5, "01": .5, "11":-.5})
+        test_input.apply_gate(qudot.H, 1)
+        test_input.apply_gate(qudot.CNOT)
+        test_input.apply_gate(qudot.H, 1)
+        self.assertEqual(test_input, output)
+
+        test_input = qudot.QuState.init_zeros(2)
+        output = qudot.QuState({"00": 1/math.sqrt(2), "11": 1/math.sqrt(2)})
+        test_input.apply_gate(qudot.H, 1)
+        test_input.apply_gate(qudot.CNOT)
+        self.assertEqual(test_input, output)
+
+
 
 class QuGateTest(unittest.TestCase):
 
