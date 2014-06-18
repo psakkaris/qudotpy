@@ -721,9 +721,12 @@ MINUS = QuBit(QuBit.MINUS)
 QUBIT_MAP = {QuBit.ZERO: ZERO, QuBit.ONE: ONE,
              QuBit.PLUS: PLUS, QuBit.MINUS: MINUS}
 
+# if you have ever done quantum computing you know why I did this
+ROOT2 = 1/math.sqrt(2)
+
 # simple/common gates
 X = QuGate.init_from_str('0 1; 1 0')
 Y = QuGate.init_from_str('0 -1j; 1j 0')
 Z = QuGate.init_from_str('1 0; 0 -1')
-H = QuGate.init_from_str('1 1; 1 -1', 1/math.sqrt(2))
+H = QuGate.init_from_str('1 1; 1 -1', ROOT2)
 CNOT = QuGate.init_from_str('1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0')
