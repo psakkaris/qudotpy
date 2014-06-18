@@ -381,18 +381,13 @@ class QuState(QuBaseState):
         dimension = qu_gate.matrix.shape[0]
         qu_gate_list = []
         if qubit_list:
-            for qubit in qubit_list:
-                if qubit > self._num_qubits:
-                    raise ValueError("Cannot apply gate to qubit #%s. "
-                                     "This state only has %s qubits" %
-                                     (qubit, self._num_qubits))
+            eye_gate = QuGate(np.asmatrix(np.eye(2)))
+            for bit in range(1, self._num_qubits + 1):
+                if bit in qubit_list:
+                    qu_gate_list.append(qu_gate)
+                else:
+                    qu_gate_list.append(eye_gate)
 
-                eye_gate = QuGate(np.asmatrix(np.eye(2)))
-                for bit in range(1, self._num_qubits + 1):
-                    if bit == qubit:
-                        qu_gate_list.append(qu_gate)
-                    else:
-                        qu_gate_list.append(eye_gate)
         else:
             qu_gate_list.append(qu_gate)
             while dimension < self._hilbert_dimension:
