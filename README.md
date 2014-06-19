@@ -22,7 +22,7 @@ ln -s /Users/softwaretest/code/qudotpy-master/
 
 Next run the pyton shell from the directory qudotpy is located and give it a try
 
-'''
+```
 $ python
 >>> from qudotpy import qudot
 >>> print qudot.apply_gate(qudot.H, qudot.ZERO)
@@ -30,13 +30,15 @@ $ python
 
 >>> 
 
-'''
+```
 
 That's it! For more check out our tutorial http://psakkaris.github.io/qudotpy/
 
 Giving Back
 ===========
 
-Feel free to contribute back to QuDotPy. If you are new to GitHub read this: https://help.github.com/articles/fork-a-repo
+Feel free to contribute back to QuDotPy. If you are new to GitHub read this: 
+
+https://help.github.com/articles/fork-a-repo
 
 If you find a bug, would like to suggest an enhancement or would like to see enhancement we have planned for the future; check out the Issues page.
