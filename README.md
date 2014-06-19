@@ -15,10 +15,10 @@ Getting Started
 You can always clone this repository and check out the code. However, if you just want to get a feel for QuDotPy just press the 'Download Zip' button on the right panel. This will download the directory **qudotpy-master**
 
 Then you should make a link on your system (for *nix and OS X):
-'''
+```
 ln -s /Users/softwaretest/code/qudotpy-master/ 
       /Users/softwaretest/code/qudotpy
-'''
+```
 
 Next run the pyton shell from the directory qudotpy is located and give it a try
 
