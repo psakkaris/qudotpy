@@ -41,4 +41,4 @@ Feel free to contribute back to QuDotPy. If you are new to GitHub read this:
 
 https://help.github.com/articles/fork-a-repo
 
-If you find a bug, would like to suggest an enhancement or would like to see enhancement we have planned for the future; check out the Issues page.
+If you find a bug, would like to suggest an enhancement or would like to see enhancements we have planned for the future; check out the Issues page.
