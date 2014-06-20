@@ -12,6 +12,9 @@ QuDotPy depends on Numpy. You will need to have Numpy installed before you can u
 Getting Started
 ===============
 
+QuDotPy depends on Python 2.7 and is specifically tested against Pythong 2.7.6
+
+
 You can always clone this repository and check out the code. However, if you just want to get a feel for QuDotPy just press the 'Download Zip' button on the right panel. This will download the directory **qudotpy-master**
 
 Then you should make a link on your system (for *nix and OS X):
@@ -20,7 +23,7 @@ ln -s /Users/softwaretest/code/qudotpy-master/
       /Users/softwaretest/code/qudotpy
 ```
 
-Next run the pyton shell from the directory qudotpy is located and give it a try
+Next run the python shell from the directory qudotpy is located and give it a try
 
 ```
 $ python
