@@ -575,8 +575,8 @@ class QuCircuit(object):
         stepping through a circuit
         """
         if self._step_op_index > 0:
-            message = "Trying to reset input QuState while stepping through" \
-                      " a circuit! You should reset_circuit() first."
+            message = ("Trying to reset input QuState while stepping through"
+                      " a circuit! You should reset_circuit() first.")
             raise qudot_errors.QuCircuitError(message)
 
         self._in_qu_state = qu_state_value
@@ -597,8 +597,8 @@ class QuCircuit(object):
                  the QuGate ill be applied to all bits.
         """
         if not ops:
-            message = "You must specify a list of tuples to define a" \
-                      " quantum circuit: [(QuGate, bit_list)]"
+            message = ("You must specify a list of tuples to define a"
+                      " quantum circuit: [(QuGate, bit_list)]")
             raise qudot_errors.QuCircuitError(message)
 
         self.ops = ops
@@ -647,9 +647,9 @@ class QuCircuit(object):
 
             return self._step_op_index
         else:
-            message = "An input QuState must be set to step through a circuit" \
-                      "Set self.in_qu_state with the QuState you want to" \
-                      "step the circuit through."
+            message = ("An input QuState must be set to step through a circuit"
+                      " Set self.in_qu_state with the QuState you want to"
+                      " step the circuit through.")
             raise qudot_errors.QuCircuitError(message)
 
     def reset_circuit(self):
