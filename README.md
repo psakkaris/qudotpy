@@ -20,7 +20,7 @@ ln -s /Users/softwaretest/code/qudotpy-master/
       /Users/softwaretest/code/qudotpy
 ```
 
-Next run the pyton shell from the directory qudotpy is located and give it a try
+Next run the python shell from the directory qudotpy is located and give it a try
 
 ```
 $ python
