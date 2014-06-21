@@ -16,6 +16,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import sys
 from distutils.core import setup
 from pkgutil import walk_packages
