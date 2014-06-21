@@ -37,7 +37,7 @@ def find_packages(root_path, prefix=""):
 with open('README.md') as file:
     long_description = file.read()
 
-required_packages = []
+required_packages = ['numpy']
 
 setup(name='qudotpy',
       version='0.1.0',
@@ -64,5 +64,5 @@ setup(name='qudotpy',
       data_files=[('', ['README.md',
                         'LICENSE.txt'])],
       packages=list(find_packages(__path__)),
-	  test_suite='qudotpy.qudotpy_test'
+	  test_suite='qudotpy.test_qudotpy'
 )
