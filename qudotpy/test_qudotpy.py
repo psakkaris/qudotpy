@@ -17,12 +17,15 @@ THE SOFTWARE.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import unittest
-import qudot
-import qudot_errors
-import qudot_utils
-import numpy
 import math
+import unittest
+
+import numpy
+
+import qudotpy.qudot as qudot
+import qudotpy.errors as qudot_errors
+import qudotpy.utils as qudot_utils
+
 
 ONE_OVER_SQRT_2 = 1 / math.sqrt(2)
 

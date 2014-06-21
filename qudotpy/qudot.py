@@ -354,7 +354,7 @@ class QuState(QuBaseState):
                 amplitude = self._state[state_index][0]
                 qubit = DIRAC_STR % dirac_state[qubit_index]
                 probablility = measurement_probability(amplitude)
-                if qubit_map.has_key(qubit):
+                if qubit in qubit_map:
                     old_probability = qubit_map[qubit]
                     qubit_map[qubit] = old_probability + probablility
                 else:
