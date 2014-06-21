@@ -64,4 +64,5 @@ setup(name='qudotpy',
       data_files=[('', ['README.md',
                         'LICENSE.txt'])],
       packages=list(find_packages(__path__)),
+	  test_suite='qudotpy.qudotpy_test'
 )
