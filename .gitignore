@@ -55,3 +55,6 @@ docs/build/
 
 # PyCharm Cruft
 .idea/
+
+# Python Notebook Stuff
+.ipynb*
