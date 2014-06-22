@@ -1,11 +1,31 @@
-__author__ = 'psakkaris'
+# -*- coding: utf-8 -*-
+"""qudot.py
 
-import unittest
-import qudot
-import qudot_errors
-import qudot_utils
-import numpy
+Description goes here...
+
+:copyright: Copyright (C) 2014 QuDot, Inc. | Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
+:license: Apache License 2.0, see LICENSE for more details.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import math
+import unittest
+
+import numpy
+
+import qudotpy.qudot as qudot
+import qudotpy.errors as qudot_errors
+import qudotpy.utils as qudot_utils
+
 
 ONE_OVER_SQRT_2 = 1 / math.sqrt(2)
 
@@ -430,3 +450,5 @@ class QuDotTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+__author__ = 'psakkaris'
