@@ -1,6 +1,8 @@
-from . import qudot
-from . import errors
-from . import utils
+# -*- coding: utf-8 -*-
+try:
+    import pkg_resources
+    pkg_resources.declare_namespace(__name__)
+except ImportError:
+    from pkgutil import extend_path
+    __path__ = extend_path(__path__, __name__)
 
-
-__all__ = ['qudot', 'errors', 'utils']

@@ -19,7 +19,9 @@ THE SOFTWARE.
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import sys
+import os
+from inspect import getfile
+from inspect import currentframe
 from distutils.core import setup
 from pkgutil import walk_packages
 
@@ -63,6 +65,7 @@ setup(name='qudotpy',
       provides=['qudotpy'],
       data_files=[('', ['README.md',
                         'LICENSE.txt'])],
-      packages=list(find_packages(__path__)),
+      namespace_packages=["qudotpy"],
+      packages=list(find_packages(qudotpy.__path__, qudotpy.__name__)),
 	  test_suite='qudotpy.test_qudotpy'
 )
