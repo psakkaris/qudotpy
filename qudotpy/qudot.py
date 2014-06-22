@@ -515,7 +515,8 @@ class QuGate(object):
         Raises:
             InvalidQuGateError: if the gate is not unitary
         """
-        matrix = np.matrix(matrix_str, dtype='complex')
+        byte_str = matrix_str.encode("ascii")
+        matrix = np.matrix(byte_str, dtype='complex')
         return QuGate(matrix, multiplier)
 
     @classmethod
