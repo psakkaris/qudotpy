@@ -1715,7 +1715,7 @@ In&nbsp;[1]:
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The most fundamental property of quantum computing is the qubit. This is a <em>two level quantum system</em> which is a bunch of fancy words for saying it is something that can have two possible values. You can call those two values what you like, but the standard is to call them |0&gt; and |1&gt; (The Computational Basis) or |+&gt; and |-&gt; (The Hadamard Basis). QuDotPy supports qubits through the QuBit class. We support both the computation and Hadamard basis. The QuBit class is meant to represent a single-qubit system. Multiple-qubit systems are described further down this tutorial. QuDotPy displays qubits using Dirac Notation. They are stored as numpy arrays and the underlying array can be access with the <em>state</em> and <em>adjoint</em> properties.</p>
+<p>The most fundamental property of quantum computing is the qubit. This is a <em>two level quantum system</em> which is a bunch of fancy words for saying it is something that can have two possible values. You can call those two values what you like, but the standard is to call them |0&gt; and |1&gt; (The Computational Basis) or |+&gt; and |-&gt; (The Hadamard Basis). QuDotPy supports qubits through the QuBit class. We support both the computation and Hadamard basis. The QuBit class is meant to represent a single-qubit system. Multiple-qubit systems are described further down this tutorial. QuDotPy displays qubits using Dirac Notation. They are stored as numpy arrays and the underlying array can be access with the <em>ket</em> and <em>bra</em> properties.</p>
 </div>
 </div>
 </div>
@@ -1732,7 +1732,7 @@ In&nbsp;[1]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[2]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1763,11 +1763,11 @@ In&nbsp;[7]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[8]:
+In&nbsp;[3]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ZERO</span><span class="o">.</span><span class="n">state</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ZERO</span><span class="o">.</span><span class="n">ket</span>
 </pre></div>
 
 </div>
@@ -1795,11 +1795,11 @@ In&nbsp;[8]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[9]:
+In&nbsp;[4]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ZERO</span><span class="o">.</span><span class="n">adjoint</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ZERO</span><span class="o">.</span><span class="n">bra</span>
 </pre></div>
 
 </div>
@@ -1826,7 +1826,7 @@ In&nbsp;[9]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[10]:
+In&nbsp;[5]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1857,11 +1857,11 @@ In&nbsp;[10]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[11]:
+In&nbsp;[6]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ONE</span><span class="o">.</span><span class="n">state</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ONE</span><span class="o">.</span><span class="n">ket</span>
 </pre></div>
 
 </div>
@@ -1889,11 +1889,11 @@ In&nbsp;[11]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[7]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ONE</span><span class="o">.</span><span class="n">adjoint</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">ONE</span><span class="o">.</span><span class="n">bra</span>
 </pre></div>
 
 </div>
@@ -1930,7 +1930,7 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[14]:
+In&nbsp;[8]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1961,11 +1961,11 @@ In&nbsp;[14]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[9]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">PLUS</span><span class="o">.</span><span class="n">state</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">PLUS</span><span class="o">.</span><span class="n">ket</span>
 </pre></div>
 
 </div>
@@ -1993,11 +1993,11 @@ In&nbsp;[15]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[16]:
+In&nbsp;[10]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">PLUS</span><span class="o">.</span><span class="n">adjoint</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">PLUS</span><span class="o">.</span><span class="n">bra</span>
 </pre></div>
 
 </div>
@@ -2024,7 +2024,7 @@ In&nbsp;[16]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[11]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2055,11 +2055,11 @@ In&nbsp;[17]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[12]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">MINUS</span><span class="o">.</span><span class="n">state</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">MINUS</span><span class="o">.</span><span class="n">ket</span>
 </pre></div>
 
 </div>
@@ -2087,11 +2087,11 @@ In&nbsp;[18]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[13]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">MINUS</span><span class="o">.</span><span class="n">adjoint</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">qudot</span><span class="o">.</span><span class="n">MINUS</span><span class="o">.</span><span class="n">bra</span>
 </pre></div>
 
 </div>
@@ -2128,7 +2128,7 @@ In&nbsp;[20]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[25]:
+In&nbsp;[14]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2151,12 +2151,12 @@ In&nbsp;[25]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-True
+False
 False
 True
+True
 False
-True
-True
+False
 
 </pre>
 </div>
@@ -2207,7 +2207,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[15]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2239,7 +2239,7 @@ In&nbsp;[26]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[16]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2260,7 +2260,7 @@ In&nbsp;[27]:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 (0.707106781187+0j)|0&gt; + (0.707106781187+0j)|1&gt;
-True
+False
 
 </pre>
 </div>
@@ -2273,7 +2273,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[17]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2294,7 +2294,7 @@ In&nbsp;[28]:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 (0.707106781187+0j)|0&gt; + (-0.707106781187+0j)|1&gt;
-True
+False
 
 </pre>
 </div>
@@ -2316,7 +2316,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[29]:
+In&nbsp;[18]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2337,7 +2337,7 @@ In&nbsp;[29]:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 (1+0j)|1&gt;
-True
+False
 
 </pre>
 </div>
@@ -2369,7 +2369,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[19]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2401,7 +2401,7 @@ In&nbsp;[30]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[20]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2419,8 +2419,8 @@ In&nbsp;[31]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-[[ 0.+0.j  0.+1.j]
- [ 0.-1.j  0.+0.j]]
+[[ 0.+0.j  0.-1.j]
+ [ 0.+1.j  0.+0.j]]
 
 </pre>
 </div>
@@ -2433,7 +2433,7 @@ In&nbsp;[31]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[32]:
+In&nbsp;[21]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2451,8 +2451,8 @@ In&nbsp;[32]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-[[ 0.-0.j  0.+1.j]
- [ 0.-1.j  0.-0.j]]
+[[ 0.-0.j  0.-1.j]
+ [ 0.+1.j  0.-0.j]]
 
 </pre>
 </div>
@@ -2465,7 +2465,7 @@ In&nbsp;[32]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[33]:
+In&nbsp;[22]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2486,7 +2486,7 @@ In&nbsp;[33]:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 (1+0j)|1&gt;
-True
+False
 
 </pre>
 </div>
@@ -2499,7 +2499,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[34]:
+In&nbsp;[23]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2520,7 +2520,7 @@ In&nbsp;[34]:
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 (0.707106781187+0j)|0&gt; + (0.707106781187+0j)|1&gt;
-True
+False
 
 </pre>
 </div>
@@ -2533,7 +2533,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[37]:
+In&nbsp;[24]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2565,7 +2565,7 @@ In&nbsp;[37]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[38]:
+In&nbsp;[25]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2622,7 +2622,7 @@ In&nbsp;[38]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[4]:
+In&nbsp;[26]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2654,7 +2654,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[5]:
+In&nbsp;[27]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2686,7 +2686,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[28]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2761,7 +2761,7 @@ False
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[2]:
+In&nbsp;[29]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2793,7 +2793,7 @@ In&nbsp;[2]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[3]:
+In&nbsp;[30]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2826,11 +2826,11 @@ In&nbsp;[3]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[4]:
+In&nbsp;[31]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">state_1</span><span class="o">.</span><span class="n">state</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">state_1</span><span class="o">.</span><span class="n">ket</span>
 </pre></div>
 
 </div>
@@ -2872,11 +2872,11 @@ In&nbsp;[4]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[5]:
+In&nbsp;[32]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
-<div class="highlight"><pre><span class="k">print</span> <span class="n">state_1</span><span class="o">.</span><span class="n">adjoint</span>
+<div class="highlight"><pre><span class="k">print</span> <span class="n">state_1</span><span class="o">.</span><span class="n">bra</span>
 </pre></div>
 
 </div>
@@ -2904,7 +2904,7 @@ In&nbsp;[5]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[6]:
+In&nbsp;[33]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2936,7 +2936,7 @@ In&nbsp;[6]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[7]:
+In&nbsp;[34]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -2954,7 +2954,7 @@ In&nbsp;[7]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-True
+False
 
 </pre>
 </div>
@@ -2978,7 +2978,7 @@ True
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[8]:
+In&nbsp;[35]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3010,7 +3010,7 @@ In&nbsp;[8]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[9]:
+In&nbsp;[36]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3042,7 +3042,7 @@ In&nbsp;[9]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[37]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3074,7 +3074,7 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[12]:
+In&nbsp;[38]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3124,7 +3124,7 @@ In&nbsp;[12]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[39]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3156,7 +3156,7 @@ In&nbsp;[19]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[40]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3188,7 +3188,7 @@ In&nbsp;[18]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[15]:
+In&nbsp;[41]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3229,7 +3229,7 @@ In&nbsp;[15]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[42]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3261,7 +3261,7 @@ In&nbsp;[20]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[43]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3293,7 +3293,7 @@ In&nbsp;[21]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[22]:
+In&nbsp;[44]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3325,7 +3325,7 @@ In&nbsp;[22]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[24]:
+In&nbsp;[45]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3366,7 +3366,7 @@ In&nbsp;[24]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[26]:
+In&nbsp;[46]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3422,7 +3422,7 @@ In&nbsp;[26]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[27]:
+In&nbsp;[47]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3454,7 +3454,7 @@ In&nbsp;[27]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[28]:
+In&nbsp;[48]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3472,7 +3472,7 @@ In&nbsp;[28]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;|0000&gt;&apos;: 0.49999999999999989, &apos;|0010&gt;&apos;: 0.25, &apos;|0110&gt;&apos;: 0.25}
+{u&apos;|0000&gt;&apos;: 0.49999999999999989, u&apos;|0010&gt;&apos;: 0.25, u&apos;|0110&gt;&apos;: 0.25}
 
 </pre>
 </div>
@@ -3485,7 +3485,7 @@ In&nbsp;[28]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[30]:
+In&nbsp;[49]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3504,7 +3504,7 @@ In&nbsp;[30]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;|0&gt;&apos;: 0.99999999999999989}
+{u&apos;|0&gt;&apos;: 0.99999999999999989}
 
 </pre>
 </div>
@@ -3517,7 +3517,7 @@ In&nbsp;[30]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[31]:
+In&nbsp;[50]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3535,7 +3535,7 @@ In&nbsp;[31]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;|0&gt;&apos;: 0.74999999999999989, &apos;|1&gt;&apos;: 0.25}
+{u&apos;|0&gt;&apos;: 0.74999999999999989, u&apos;|1&gt;&apos;: 0.25}
 
 </pre>
 </div>
@@ -3548,7 +3548,7 @@ In&nbsp;[31]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[33]:
+In&nbsp;[51]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3566,7 +3566,7 @@ In&nbsp;[33]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;|0&gt;&apos;: 0.49999999999999989, &apos;|1&gt;&apos;: 0.5}
+{u&apos;|0&gt;&apos;: 0.49999999999999989, u&apos;|1&gt;&apos;: 0.5}
 
 </pre>
 </div>
@@ -3579,7 +3579,7 @@ In&nbsp;[33]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[34]:
+In&nbsp;[52]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3597,7 +3597,7 @@ In&nbsp;[34]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;|0&gt;&apos;: 0.99999999999999989}
+{u&apos;|0&gt;&apos;: 0.99999999999999989}
 
 </pre>
 </div>
@@ -3610,7 +3610,7 @@ In&nbsp;[34]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[36]:
+In&nbsp;[53]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3629,7 +3629,7 @@ In&nbsp;[36]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-1.0|0000&gt;
+1.0|0110&gt;
 
 </pre>
 </div>
@@ -3651,7 +3651,7 @@ In&nbsp;[36]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[38]:
+In&nbsp;[54]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3692,7 +3692,7 @@ In&nbsp;[38]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[40]:
+In&nbsp;[55]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3707,7 +3707,7 @@ In&nbsp;[40]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[41]:
+In&nbsp;[56]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3732,7 +3732,7 @@ In&nbsp;[41]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[42]:
+In&nbsp;[57]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3750,7 +3750,7 @@ In&nbsp;[42]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;1.0|0000&gt;&apos;: 4, &apos;1.0|0010&gt;&apos;: 3, &apos;1.0|0110&gt;&apos;: 3}
+{&apos;1.0|0000&gt;&apos;: 3, &apos;1.0|0010&gt;&apos;: 3, &apos;1.0|0110&gt;&apos;: 4}
 
 </pre>
 </div>
@@ -3781,7 +3781,7 @@ In&nbsp;[42]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[47]:
+In&nbsp;[58]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3801,7 +3801,7 @@ In&nbsp;[47]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;1.0|0000&gt;&apos;: 49, &apos;1.0|0010&gt;&apos;: 19, &apos;1.0|0110&gt;&apos;: 32}
+{&apos;1.0|0000&gt;&apos;: 52, &apos;1.0|0010&gt;&apos;: 24, &apos;1.0|0110&gt;&apos;: 24}
 
 </pre>
 </div>
@@ -3814,7 +3814,7 @@ In&nbsp;[47]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[48]:
+In&nbsp;[59]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3834,7 +3834,7 @@ In&nbsp;[48]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;1.0|0000&gt;&apos;: 508, &apos;1.0|0010&gt;&apos;: 239, &apos;1.0|0110&gt;&apos;: 253}
+{&apos;1.0|0000&gt;&apos;: 491, &apos;1.0|0010&gt;&apos;: 257, &apos;1.0|0110&gt;&apos;: 252}
 
 </pre>
 </div>
@@ -3847,7 +3847,7 @@ In&nbsp;[48]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[49]:
+In&nbsp;[67]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3867,7 +3867,7 @@ In&nbsp;[49]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;1.0|0000&gt;&apos;: 4931, &apos;1.0|0010&gt;&apos;: 2541, &apos;1.0|0110&gt;&apos;: 2528}
+{&apos;1.0|0000&gt;&apos;: 5013, &apos;1.0|0010&gt;&apos;: 2513, &apos;1.0|0110&gt;&apos;: 2474}
 
 </pre>
 </div>
@@ -3880,7 +3880,7 @@ In&nbsp;[49]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[50]:
+In&nbsp;[68]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3900,7 +3900,7 @@ In&nbsp;[50]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-{&apos;1.0|0000&gt;&apos;: 49816, &apos;1.0|0010&gt;&apos;: 25220, &apos;1.0|0110&gt;&apos;: 24964}
+{&apos;1.0|0000&gt;&apos;: 49966, &apos;1.0|0010&gt;&apos;: 24868, &apos;1.0|0110&gt;&apos;: 25166}
 
 </pre>
 </div>
@@ -3917,11 +3917,11 @@ In&nbsp;[50]:
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>So hopefully this explains how your probabilities approach theory as your ensemble gets larger. Its basically the law of large numbers. This is a summary of the results for state |0000&gt;. The theory predicts we should get this state 50% of the time, as the ensemble gets larger, we get closer to the theoretical result:</p>
 <ul>
-<li>For 10 states: 40%</li>
-<li>For 100 states: 49%</li>
-<li>For 1000 states: 50.8%</li>
-<li>For 10000 states: 49.3%</li>
-<li>For 100000 states: 49.816%</li>
+<li>For 10 states: 30%</li>
+<li>For 100 states: 52%</li>
+<li>For 1000 states: 49.1%</li>
+<li>For 10000 states: 50.13%</li>
+<li>For 100000 states: 49.966%</li>
 </ul>
 </div>
 </div>
@@ -3949,7 +3949,7 @@ In&nbsp;[50]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[3]:
+In&nbsp;[66]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -3990,7 +3990,7 @@ In&nbsp;[3]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[52]:
+In&nbsp;[63]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4031,7 +4031,7 @@ In&nbsp;[52]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[53]:
+In&nbsp;[64]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4063,7 +4063,7 @@ In&nbsp;[53]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[54]:
+In&nbsp;[65]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4096,7 +4096,7 @@ In&nbsp;[54]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[55]:
+In&nbsp;[69]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4116,7 +4116,7 @@ In&nbsp;[55]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-(0.707106781187+0j)|0000&gt; + (0.5+0j)|0010&gt; + (0.5+0j)|0110&gt;
+(0.5+0j)|1001&gt; + (0.5+0j)|1101&gt; + (0.707106781187+0j)|1111&gt;
 
 </pre>
 </div>
@@ -4129,7 +4129,7 @@ In&nbsp;[55]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[4]:
+In&nbsp;[70]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4149,7 +4149,7 @@ In&nbsp;[4]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-(0.5+0j)|1000&gt; + (0.707106781187+0j)|1010&gt; + (0.5+0j)|1100&gt;
+(0.5+0j)|0011&gt; + (0.707106781187+0j)|0101&gt; + (0.5+0j)|0111&gt;
 
 </pre>
 </div>
@@ -4171,7 +4171,7 @@ In&nbsp;[4]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[5]:
+In&nbsp;[71]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4203,7 +4203,7 @@ In&nbsp;[5]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[6]:
+In&nbsp;[72]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4245,7 +4245,7 @@ In&nbsp;[6]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[12]:
+In&nbsp;[73]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4318,7 +4318,7 @@ In&nbsp;[12]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[13]:
+In&nbsp;[74]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4333,7 +4333,7 @@ In&nbsp;[13]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[17]:
+In&nbsp;[75]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4369,7 +4369,7 @@ out: (0.707106781187+0j)|00&gt; + (0.707106781187+0j)|11&gt;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[18]:
+In&nbsp;[76]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4405,7 +4405,7 @@ out: (0.707106781187+0j)|00&gt; + (-0.707106781187+0j)|11&gt;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[19]:
+In&nbsp;[77]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4441,7 +4441,7 @@ out: (0.707106781187+0j)|01&gt; + (0.707106781187+0j)|10&gt;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[20]:
+In&nbsp;[78]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -4486,7 +4486,7 @@ out: (0.707106781187+0j)|01&gt; + (-0.707106781187+0j)|10&gt;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[21]:
+In&nbsp;[79]:
 </div>
 <div class="inner_cell">
     <div class="input_area">

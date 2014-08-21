@@ -1,11 +1,31 @@
-__author__ = 'psakkaris'
+# -*- coding: utf-8 -*-
+"""qudot.py
 
-import unittest
-import qudot
-import qudot_errors
-import qudot_utils
-import numpy
+Description goes here...
+
+:copyright: Copyright (C) 2014 QuDot, Inc. | Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
+:license: Apache License 2.0, see LICENSE for more details.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import math
+import unittest
+
+import numpy
+
+import qudotpy.qudot as qudot
+import qudotpy.errors as qudot_errors
+import qudotpy.utils as qudot_utils
+
 
 ONE_OVER_SQRT_2 = 1 / math.sqrt(2)
 
@@ -52,10 +72,10 @@ class QuBitTest(unittest.TestCase):
         tmp_plus = get_column_vector([amplitude, amplitude])
         tmp_minus = get_column_vector([amplitude, -amplitude])
 
-        self.assertTrue(vectors_equal(tmp_zero, self.zero.state))
-        self.assertTrue(vectors_equal(tmp_one, self.one.state))
-        self.assertTrue(vectors_equal(tmp_plus, self.plus.state))
-        self.assertTrue(vectors_equal(tmp_minus, self.minus.state))
+        self.assertTrue(vectors_equal(tmp_zero, self.zero.ket))
+        self.assertTrue(vectors_equal(tmp_one, self.one.ket))
+        self.assertTrue(vectors_equal(tmp_plus, self.plus.ket))
+        self.assertTrue(vectors_equal(tmp_minus, self.minus.ket))
 
     def test_adjoint(self):
         amplitude = 1 / math.sqrt(2)
@@ -64,10 +84,10 @@ class QuBitTest(unittest.TestCase):
         tmp_plus = get_row_vector([amplitude, amplitude])
         tmp_minus = get_row_vector([amplitude, -amplitude])
 
-        self.assertTrue(vectors_equal(tmp_zero, self.zero.adjoint))
-        self.assertTrue(vectors_equal(tmp_one, self.one.adjoint))
-        self.assertTrue(vectors_equal(tmp_plus, self.plus.adjoint))
-        self.assertTrue(vectors_equal(tmp_minus, self.minus.adjoint))
+        self.assertTrue(vectors_equal(tmp_zero, self.zero.bra))
+        self.assertTrue(vectors_equal(tmp_one, self.one.bra))
+        self.assertTrue(vectors_equal(tmp_plus, self.plus.bra))
+        self.assertTrue(vectors_equal(tmp_minus, self.minus.bra))
 
     def test_equals(self):
         self.assertEqual(self.one, qudot.ONE)
@@ -133,8 +153,8 @@ class QuStateTest(unittest.TestCase):
 
         column_vector = get_column_vector(self.base_vector)
         row_vector = get_row_vector(self.adj_vector)
-        self.assertTrue(vectors_equal(column_vector, qu_state.state))
-        self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
+        self.assertTrue(vectors_equal(column_vector, qu_state.ket))
+        self.assertTrue(vectors_equal(row_vector, qu_state.bra))
         self.assertTrue(4 == qu_state.num_qubits)
         self.assertTrue(2**4 == qu_state.hilbert_dimension)
 
@@ -148,8 +168,8 @@ class QuStateTest(unittest.TestCase):
         qu_state = qudot.QuState.init_from_state_list(qu_state_lst)
         column_vector = get_column_vector(self.base_vector_real)
         row_vector = get_row_vector(self.base_vector_real)
-        self.assertTrue(vectors_equal(column_vector, qu_state.state))
-        self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
+        self.assertTrue(vectors_equal(column_vector, qu_state.ket))
+        self.assertTrue(vectors_equal(row_vector, qu_state.bra))
         self.assertTrue(4 == qu_state.num_qubits)
         self.assertTrue(2**4 == qu_state.hilbert_dimension)
 
@@ -165,8 +185,8 @@ class QuStateTest(unittest.TestCase):
 
         column_vector = get_column_vector(vector)
         row_vector = get_row_vector(vector)
-        self.assertTrue(vectors_equal(column_vector, qu_state.state))
-        self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
+        self.assertTrue(vectors_equal(column_vector, qu_state.ket))
+        self.assertTrue(vectors_equal(row_vector, qu_state.bra))
 
     def test_init_from_vector(self):
         vector = [.707, 0, 0, .707]
@@ -178,8 +198,8 @@ class QuStateTest(unittest.TestCase):
         qu_state = qudot.QuState.init_from_vector(column_vector)
         self.assertTrue(qu_state.num_qubits == 2)
         self.assertTrue(qu_state.hilbert_dimension == 2**2)
-        self.assertTrue(vectors_equal(column_vector,qu_state.state))
-        self.assertTrue(vectors_equal(row_vector, qu_state.adjoint))
+        self.assertTrue(vectors_equal(column_vector,qu_state.ket))
+        self.assertTrue(vectors_equal(row_vector, qu_state.bra))
 
     def test_init_zeros(self):
         self.assertTrue(str(qudot.QuState.init_zeros(2)), "1|00>")
@@ -232,11 +252,11 @@ class QuStateTest(unittest.TestCase):
         measurement = self.test_state.measure()
         self.assertTrue(measurement in possible_measurements)
         int_result = qudot_utils.dirac_str_to_int(measurement)
-        self.assertTrue(self.test_state.state[int_result][0] == 1)
+        self.assertTrue(self.test_state.ket[int_result][0] == 1)
         for possible_measurement in possible_measurements:
             if possible_measurement != measurement:
                 index = qudot_utils.dirac_str_to_int(possible_measurement)
-                self.assertTrue(self.test_state.state[index][0] == 0)
+                self.assertTrue(self.test_state.ket[index][0] == 0)
 
     def test_equals(self):
         test_list = []
@@ -413,7 +433,7 @@ class QuDotTest(unittest.TestCase):
         self.assertEqual(result, qudot.ZERO)
 
         result = qudot.apply_gate(qudot.Z, qudot.ONE)
-        self.assertTrue(vectors_equal(result.state, qudot.ONE.state * (-1)))
+        self.assertTrue(vectors_equal(result.ket, qudot.ONE.ket * (-1)))
 
         result = qudot.apply_gate(qudot.H, qudot.ZERO)
         self.assertEqual(result, qudot.PLUS)
@@ -430,3 +450,5 @@ class QuDotTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+__author__ = 'psakkaris'
