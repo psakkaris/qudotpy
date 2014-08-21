@@ -45,12 +45,12 @@ class QuBaseState(object):
     """
 
     @property
-    def state(self):
+    def ket(self):
         """Column vector representation of the quantum state"""
         return self._state
 
     @property
-    def adjoint(self):
+    def bra(self):
         """The Hermitian Conjugate of the state a.k.a row vector"""
         return np.conjugate(self._state.T)
 
@@ -59,7 +59,7 @@ class QuBaseState(object):
         #TODO: choose and configure project wide tolerance value
         equal = False
         if hasattr(other, "state"):
-            equal = np.allclose(self.state, other.state)
+            equal = np.allclose(self.ket, other.ket)
 
         return equal
 
@@ -178,9 +178,9 @@ class QuState(QuBaseState):
                 tmp = None
                 for bit in state_bit_str[::-1]:
                     if tmp is None:
-                        tmp = QuBit(bit).state
+                        tmp = QuBit(bit).ket
                     else:
-                        tmp = np.kron(QuBit(bit).state, tmp)
+                        tmp = np.kron(QuBit(bit).ket, tmp)
 
                 if hasattr(self, "_state"):
                     self._state += (tmp * amplitude)
@@ -292,7 +292,7 @@ class QuState(QuBaseState):
         """Dirac notation of qubit """
         my_str = []
         index = 0
-        for element in self.state:
+        for element in self.ket:
             if element:
                 if my_str:
                     my_str.append(" + ")
@@ -335,7 +335,7 @@ class QuState(QuBaseState):
         """
         states_map = {}
         index = 0
-        for element in self.state:
+        for element in self.ket:
             if element:
                 probablility = measurement_probability(element[0])
                 dirac_str = int_to_dirac_str(
@@ -719,7 +719,7 @@ def apply_gate(qu_gate, base_state):
         A new QuState object that represents the result of applying
         qu_gate to qu_state
     """
-    result = np.asarray(qu_gate.matrix * base_state.state)
+    result = np.asarray(qu_gate.matrix * base_state.ket)
     return QuState.init_from_vector(result)
 
 def tensor_gates(left_gate, right_gate):
@@ -729,7 +729,7 @@ def tensor_gates(left_gate, right_gate):
 
 def tensor_states(left_state, right_state):
     """Return the tensor product of two quantum states """
-    new_state = np.kron(left_state.state, right_state.state)
+    new_state = np.kron(left_state.ket, right_state.ket)
     return QuState.init_from_vector(new_state)
 
 
