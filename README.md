@@ -14,16 +14,15 @@ Getting Started
 
 QuDotPy depends on Python 2.7 and is specifically tested against Pythong 2.7.6
 
+Some recent improvement should enable it to work for Python 3.x, you can test by running the unit tests in the parent qudotpy directory
+```
+python -m unittest qudotpy.test_qudotpy
+```
+
 
 You can always clone this repository and check out the code. However, if you just want to get a feel for QuDotPy just press the 'Download Zip' button on the right panel. This will download the directory **qudotpy-master**
 
-Then you should make a link on your system (for *nix and OS X):
-```
-ln -s /Users/softwaretest/code/qudotpy-master/ 
-      /Users/softwaretest/code/qudotpy
-```
-
-Next run the python shell from the directory qudotpy is located and give it a try
+Next run the python shell from the qudotpy directory
 
 ```
 $ python
@@ -34,6 +33,13 @@ $ python
 >>> 
 
 ```
+
+You can also install the library as a package thanks to the contributions of sfinucane. From the parent directory
+you can now run:
+```
+python setup.py install
+```
+and qudotpy will be available on your system.
 
 That's it! For more check out our tutorial http://psakkaris.github.io/qudotpy/
 
