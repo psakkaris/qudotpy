@@ -58,7 +58,7 @@ class QuBaseState(object):
         """Considered equal if all elements of a state are within threshold"""
         #TODO: choose and configure project wide tolerance value
         equal = False
-        if hasattr(other, "state"):
+        if hasattr(other, "ket"):
             equal = np.allclose(self.ket, other.ket)
 
         return equal
@@ -465,7 +465,7 @@ class QuGate(object):
         """Logically opposite of __eq__(other) """
         return not self.__eq__(other)
 
-    def __init__(self, matrix, multiplier=-1):
+    def __init__(self, matrix, multiplier=0):
         """Create a quantum gate from a numpy matrix.
 
         Note that if the matrix dtype is not complex it will be converted
@@ -489,7 +489,7 @@ class QuGate(object):
         if shape[0] != shape[1]:
             raise InvalidQuGateError("Gate is not a square matrix")
 
-        if multiplier > 0:
+        if multiplier:
             self._matrix = self._matrix * multiplier
 
         #TODO: choose and configure project wide tolerance value
@@ -499,7 +499,7 @@ class QuGate(object):
             raise InvalidQuGateError("Gate is not unitary")
 
     @classmethod
-    def init_from_str(cls, matrix_str, multiplier=-1):
+    def init_from_str(cls, matrix_str, multiplier=0):
         """Create a quantum gate from a string.
 
         The string of the quantum gate should be rows separated by

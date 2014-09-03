@@ -319,7 +319,7 @@ class QuGateTest(unittest.TestCase):
         self.assertEqual(qudot.X, qudot.QuGate.init_from_mul(qu_gates))
 
         qu_gates = [qudot.H, qudot.Y, qudot.H]
-        minus_Y = qudot.QuGate.init_from_str('0 1j; -1j 0')
+        minus_Y = qudot.QuGate(qudot.Y.matrix, -1)
         self.assertEqual(minus_Y, qudot.QuGate.init_from_mul(qu_gates))
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
