@@ -14,7 +14,7 @@ Getting Started
 
 QuDotPy depends on Python 2.7 and is specifically tested against Pythong 2.7.6
 
-Some recent improvement should enable it to work for Python 3.x, you can test by running the unit tests in the parent qudotpy directory
+You can test by running the unit tests in the parent qudotpy directory
 ```
 python -m unittest qudotpy.test_qudotpy
 ```
