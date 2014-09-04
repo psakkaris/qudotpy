@@ -330,6 +330,11 @@ class QuGateTest(unittest.TestCase):
         self.assertRaises(qudot_errors.InvalidQuGateError,
                           lambda : qudot.QuGate.init_from_mul(qu_gates))
 
+    def test_mul(self):
+        self.assertEqual(qudot.Z, qudot.H * qudot.X * qudot.H)
+        self.assertEqual(qudot.X, qudot.H * qudot.Z * qudot.H)
+        self.assertEqual(-1 * qudot.Y, qudot.H * qudot.Y * qudot.H)
+
 
     def test_init_from_tensor_product(self):
         X_X = qudot.QuGate.init_from_str("0 0 0 1;"

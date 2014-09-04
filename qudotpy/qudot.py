@@ -489,6 +489,23 @@ class QuGate(object):
         if not is_unitary:
             raise errors.InvalidQuGateError("Gate is not unitary")
 
+
+    def __mul__(self, other):
+        """Override multiplication operator. Supports other QuGate or number
+           Matrix multiplication does not commute so need rmul as well
+        """
+        if hasattr(other, "matrix"):
+            return QuGate(self.matrix * other.matrix)
+        else:
+            return QuGate(self.matrix, other)
+
+    def __rmul__(self, other):
+        """Override multiplication operator. Supports other QuGate or number"""
+        if hasattr(other, "matrix"):
+            return QuGate(other.matrix * self.matrix)
+        else:
+            return QuGate(self.matrix, other)
+
     @classmethod
     def init_from_str(cls, matrix_str, multiplier=0):
         """Create a quantum gate from a string.
