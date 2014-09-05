@@ -105,13 +105,13 @@ class QuBit(QuBaseState):
             InvalidQubitError: didn't recognize the qubit string
         """
         if qubit_str == QuBit.ZERO:
-            self._state = np.array([[1], [0]])
+            self._state = np.array([[1], [0]], dtype="complex")
         elif qubit_str == QuBit.ONE:
-            self._state = np.array([[0], [1]])
+            self._state = np.array([[0], [1]], dtype="complex")
         elif qubit_str == QuBit.PLUS:
-            self._state = np.array([[1], [1]]) * 1 / np.sqrt(2)
+            self._state = np.array([[1], [1]], dtype="complex") * 1 / np.sqrt(2)
         elif qubit_str == QuBit.MINUS:
-            self._state = np.array([[1], [-1]]) * 1 / np.sqrt(2)
+            self._state = np.array([[1], [-1]], dtype="complex") * 1 / np.sqrt(2)
         else:
             message = ("A qubit must be one of the strings %s, %s, %s or %s"
                        % (QuBit.ZERO, QuBit.ONE, QuBit.PLUS, QuBit.MINUS))
@@ -291,11 +291,19 @@ class QuState(QuBaseState):
             if element:
                 if my_str:
                     my_str.append(" + ")
-                my_str.append(str(element[0]))
+                my_str.append(self._amplitude_str(element[0]))
                 bit_str = utils.int_to_dirac_str(index, self._num_qubits)
                 my_str.append(bit_str)
             index += 1
         return "".join(my_str)
+
+    def _amplitude_str(self, amplitude):
+        if amplitude.real and not amplitude.imag:
+            return str(amplitude.real)
+        elif amplitude.imag and not amplitude.real:
+            return str(amplitude.imag)
+        else:
+            return str(amplitude)
 
     def _collapse(self, state_str):
         """collapses the state to the specified state_str"""
@@ -523,8 +531,7 @@ class QuGate(object):
         Raises:
             InvalidQuGateError: if the gate is not unitary
         """
-        byte_str = matrix_str.encode("ascii")
-        matrix = np.matrix(byte_str, dtype='complex')
+        matrix = np.matrix(str(matrix_str), dtype='complex')
         return QuGate(matrix, multiplier)
 
     @classmethod
@@ -757,10 +764,10 @@ QUBIT_MAP = {QuBit.ZERO: ZERO, QuBit.ONE: ONE,
 ROOT2 = 1/math.sqrt(2)
 
 # simple/common gates
-X = QuGate.init_from_str('0 1; 1 0')
-Y = QuGate.init_from_str('0 -1j; 1j 0')
-Z = QuGate.init_from_str('1 0; 0 -1')
-H = QuGate.init_from_str('1 1; 1 -1', ROOT2)
-CNOT = QuGate.init_from_str('1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0')
+X = QuGate.init_from_str("0 1; 1 0")
+Y = QuGate.init_from_str("0 -1j; 1j 0")
+Z = QuGate.init_from_str("1 0; 0 -1")
+H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
+CNOT = QuGate.init_from_str("1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0")
 
 __author__ = 'psakkaris'
