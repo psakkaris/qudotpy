@@ -362,6 +362,25 @@ class QuGateTest(unittest.TestCase):
         gates = [qudot.H, qudot.H]
         self.assertEqual(H_H, qudot.QuGate.init_from_tensor_product(gates))
 
+    def test_init_control_gate(self):
+        cnot = qudot.QuGate.init_control_gate(qudot.X)
+        self.assertEqual(cnot, qudot.CNOT)
+        self.assertNotEqual(cnot, qudot.X)
+
+        cz = qudot.QuGate.init_control_gate(qudot.Z)
+        cz_manual = qudot.QuGate.init_from_str("1 0 0 0;"
+                                               "0 1 0 0;"
+                                               "0 0 1 0;"
+                                               "0 0 0 -1")
+        self.assertEqual(cz, cz_manual)
+
+        cy = qudot.QuGate.init_control_gate(qudot.Y)
+        cy_manual = qudot.QuGate.init_from_str("1 0 0 0;"
+                                               "0 1 0 0;"
+                                               "0 0 0 -1j;"
+                                               "0 0 1j 0")
+        self.assertEqual(cy, cy_manual)
+
 
 class QuCircuitTest(unittest.TestCase):
 
