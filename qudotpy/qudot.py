@@ -105,13 +105,13 @@ class QuBit(QuBaseState):
             InvalidQubitError: didn't recognize the qubit string
         """
         if qubit_str == QuBit.ZERO:
-            self._state = np.array([[1], [0]], dtype="complex")
+            self._state = np.array([[1], [0]], dtype="complex64")
         elif qubit_str == QuBit.ONE:
-            self._state = np.array([[0], [1]], dtype="complex")
+            self._state = np.array([[0], [1]], dtype="complex64")
         elif qubit_str == QuBit.PLUS:
-            self._state = np.array([[1], [1]], dtype="complex") * 1 / np.sqrt(2)
+            self._state = np.array([[1], [1]], dtype="complex64") * 1/np.sqrt(2)
         elif qubit_str == QuBit.MINUS:
-            self._state = np.array([[1], [-1]], dtype="complex") * 1 / np.sqrt(2)
+            self._state = np.array([[1], [-1]], dtype="complex64") * 1/np.sqrt(2)
         else:
             message = ("A qubit must be one of the strings %s, %s, %s or %s"
                        % (QuBit.ZERO, QuBit.ONE, QuBit.PLUS, QuBit.MINUS))
@@ -480,10 +480,10 @@ class QuGate(object):
             InvalidQuGateError: if the gate is not unitary
         """
 
-        if matrix.dtype == np.dtype('complex'):
+        if matrix.dtype == np.dtype('complex64'):
             self._matrix = matrix
         else:
-            self._matrix = matrix.astype('complex')
+            self._matrix = matrix.astype('complex64')
 
         shape = self._matrix.shape
         if shape[0] != shape[1]:
@@ -532,7 +532,7 @@ class QuGate(object):
         Raises:
             InvalidQuGateError: if the gate is not unitary
         """
-        matrix = np.matrix(str(matrix_str), dtype='complex')
+        matrix = np.matrix(str(matrix_str), dtype='complex64')
         return QuGate(matrix, multiplier)
 
     @classmethod
@@ -758,6 +758,16 @@ def tensor_gates(left_gate, right_gate):
     new_matrix = np.kron(left_gate.matrix, right_gate.matrix)
     return QuGate(new_matrix)
 
+def tensor_gate_list(gates):
+    """ Return a tensor product of all gates in passed in"""
+    matrix = None
+    if gates:
+        matrix = gates[0].matrix
+        for i in range(1, len(gates)):
+            matrix = np.kron(matrix, gates[i].matrix)
+
+    return matrix
+
 def tensor_states(left_state, right_state):
     """Return the tensor product of two quantum states """
     new_state = np.kron(left_state.ket, right_state.ket)
@@ -784,6 +794,7 @@ X = QuGate.init_from_str("0 1; 1 0")
 Y = QuGate.init_from_str("0 -1j; 1j 0")
 Z = QuGate.init_from_str("1 0; 0 -1")
 H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
+I = QuGate(np.matrix(np.eye(2)))
 CNOT = QuGate.init_from_str("1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0")
 
 __author__ = 'psakkaris'
