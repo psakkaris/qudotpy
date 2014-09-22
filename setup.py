@@ -3,7 +3,7 @@
 
 Package setup and installation per standard Python practice.
 
-:copyright: Copyright (C) 2014 QuDot, Inc. | Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
+:copyright: Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
 :license: Apache License 2.0, see LICENSE for more details.
 
 http://www.apache.org/licenses/LICENSE-2.0
