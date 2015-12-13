@@ -601,6 +601,54 @@ class QuGate(object):
         U = np.kron(ONE.ket * ONE.bra, qu_gate.matrix)
         return QuGate(control + U)
 
+    @classmethod
+    def init_control_gate(cls, qu_gate, control_qubit=1, target_qubit=2, num_qubits=2):
+        """ Creates a CONTROL-U gate where qu_gate is U
+
+        Note we use the handy formula for control-U gates in
+        Rieffel/Polak page 78:
+        |0><0| x I + |1><1| x U
+        where x is the tensor product
+
+        Args:
+            qu_gate: a QuGate which acts as your U in control-U
+            control_qubit: the index of the control bit, default is 1
+            target_qubit: the index of the target bit, default is 2
+            num_qubits: total number of qubits, default is 2
+        """
+        if num_qubits < 2:
+            raise errors.InvalidQuGateError("control gates must operate on at least 2 qubits")
+
+        if control_qubit == target_qubit:
+            raise errors.InvalidQuGateError("control qubit must be different than target qubit")
+
+        if control_qubit > num_qubits:
+            raise errors.InvalidQuGateError("control qubit cannot be greater than total number of qubits")
+
+        if target_qubit > num_qubits:
+            raise errors.InvalidQuGateError("target qubit cannot be greater than total number of qubits")
+
+        index = 1
+        # start with 1x1 matrix, a.k.a a number
+        control_mat = 1
+        target_mat = 1
+        # build control and target matrices
+        while index <= num_qubits:
+            if index == control_qubit:
+                control_mat = np.kron(control_mat, ZERO.ket * ZERO.bra)
+                target_mat = np.kron(target_mat, ONE.ket * ONE.bra)
+            elif index == target_qubit:
+                control_mat = np.kron(control_mat, np.eye(2))
+                target_mat = np.kron(target_mat, qu_gate.matrix)
+            else:
+                control_mat = np.kron(control_mat, np.eye(2))
+                target_mat = np.kron(target_mat, np.eye(2))
+
+            index += 1
+
+        control_gate = control_mat + target_mat
+        return QuGate(control_gate)
+
 
 class QuCircuit(object):
     """Representation of a quantum circuit and methods to run it.
@@ -794,6 +842,6 @@ Y = QuGate.init_from_str("0 -1j; 1j 0")
 Z = QuGate.init_from_str("1 0; 0 -1")
 H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
 I = QuGate(np.matrix(np.eye(2)))
-CNOT = QuGate.init_from_str("1 0 0 0; 0 1 0 0; 0 0 0 1; 0 0 1 0")
+CNOT = QuGate.init_control_gate(X)
 
 __author__ = 'psakkaris'
