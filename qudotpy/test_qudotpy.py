@@ -380,6 +380,18 @@ class QuGateTest(unittest.TestCase):
                                                "0 0 1j 0")
         self.assertEqual(cy, cy_manual)
 
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=1, target_qubit=2, num_qubits=1))
+
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=1, target_qubit=1, num_qubits=3))
+
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=4, target_qubit=1, num_qubits=2))
+
+        self.assertRaises(qudot_errors.InvalidQuGateError,
+                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=4, target_qubit=5, num_qubits=3))
+
 
 class QuCircuitTest(unittest.TestCase):
 
