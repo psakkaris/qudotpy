@@ -587,21 +587,6 @@ class QuGate(object):
             raise errors.InvalidQuGateError("No gates specified")
 
     @classmethod
-    def init_control_gate(cls, qu_gate):
-        """ Creates a CONTROL-U gate where qu_gate is U
-
-        Note we use the handy formula for control-U gates in
-        Rieffel/Polak page 78:
-        |0><0| x I + |1><1| x U
-        where x is the tensor product
-        Args:
-            qu_gate: a QuGate which acts as your U in control-U
-        """
-        control = np.kron(ZERO.ket * ZERO.bra, np.eye(2))
-        U = np.kron(ONE.ket * ONE.bra, qu_gate.matrix)
-        return QuGate(control + U)
-
-    @classmethod
     def init_control_gate(cls, qu_gate, control_qubit=1, target_qubit=2, num_qubits=2):
         """ Creates a CONTROL-U gate where qu_gate is U
 
