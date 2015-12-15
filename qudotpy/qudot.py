@@ -19,6 +19,7 @@ from __future__ import (absolute_import, division, print_function,
 
 # standard library
 import math
+import cmath
 import random
 
 # third-party
@@ -634,6 +635,12 @@ class QuGate(object):
         control_gate = control_mat + target_mat
         return QuGate(control_gate)
 
+    @classmethod
+    def init_phase_gate(cls, k):
+        phase = (2 * cmath.pi * 1j) / (2**k)
+        phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex64")
+        return QuGate(phase_matrix)
+
 
 class QuCircuit(object):
     """Representation of a quantum circuit and methods to run it.
@@ -826,6 +833,8 @@ X = QuGate.init_from_str("0 1; 1 0")
 Y = QuGate.init_from_str("0 -1j; 1j 0")
 Z = QuGate.init_from_str("1 0; 0 -1")
 H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
+S = QuGate.init_from_str("1 0; 0 1j")
+T = QuGate.init_phase_gate(3)
 I = QuGate(np.matrix(np.eye(2)))
 CNOT = QuGate.init_control_gate(X)
 

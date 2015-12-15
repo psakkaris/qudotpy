@@ -392,6 +392,25 @@ class QuGateTest(unittest.TestCase):
         self.assertRaises(qudot_errors.InvalidQuGateError,
                           lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=4, target_qubit=5, num_qubits=3))
 
+    def test_init_phase_gate(self):
+        r0 = qudot.QuGate.init_phase_gate(0)
+        r1 = qudot.QuGate.init_phase_gate(1)
+        r2 = qudot.QuGate.init_phase_gate(2)
+        r3 = qudot.QuGate.init_phase_gate(3)
+
+        self.assertEqual(r0, qudot.I)
+        self.assertEqual(r1, qudot.Z)
+        self.assertEqual(r2, qudot.S)
+        self.assertEqual(r3, qudot.T)
+
+        c_r1 = qudot.QuGate.init_control_gate(r1)
+        c_r2 = qudot.QuGate.init_control_gate(r2)
+        c_r3 = qudot.QuGate.init_control_gate(r3)
+
+        self.assertEqual(c_r1, qudot.QuGate.init_control_gate(r1, control_qubit=2, target_qubit=1))
+        self.assertEqual(c_r2, qudot.QuGate.init_control_gate(r2, control_qubit=2, target_qubit=1))
+        self.assertEqual(c_r3, qudot.QuGate.init_control_gate(r3, control_qubit=2, target_qubit=1))
+
 
 class QuCircuitTest(unittest.TestCase):
 
