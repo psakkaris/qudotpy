@@ -361,6 +361,9 @@ class QuGateTest(unittest.TestCase):
         gates = [qudot.H, qudot.H]
         self.assertEqual(H_H, qudot.QuGate.init_from_tensor_product(gates))
 
+        gates = [qudot.H, qudot.H, qudot.H, qudot.H, qudot.H]
+        qudot.QuGate.init_from_tensor_product(gates)
+
     def test_init_control_gate(self):
         cnot = qudot.QuGate.init_control_gate(qudot.X)
         self.assertEqual(cnot, qudot.CNOT)

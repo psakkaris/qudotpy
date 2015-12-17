@@ -105,13 +105,13 @@ class QuBit(QuBaseState):
             InvalidQubitError: didn't recognize the qubit string
         """
         if qubit_str == QuBit.ZERO:
-            self._state = np.array([[1], [0]], dtype="complex64")
+            self._state = np.array([[1], [0]], dtype="complex128")
         elif qubit_str == QuBit.ONE:
-            self._state = np.array([[0], [1]], dtype="complex64")
+            self._state = np.array([[0], [1]], dtype="complex128")
         elif qubit_str == QuBit.PLUS:
-            self._state = np.array([[1], [1]], dtype="complex64") * 1/np.sqrt(2)
+            self._state = np.array([[1], [1]], dtype="complex128") * 1/np.sqrt(2)
         elif qubit_str == QuBit.MINUS:
-            self._state = np.array([[1], [-1]], dtype="complex64") * 1/np.sqrt(2)
+            self._state = np.array([[1], [-1]], dtype="complex128") * 1/np.sqrt(2)
         else:
             message = ("A qubit must be one of the strings %s, %s, %s or %s"
                        % (QuBit.ZERO, QuBit.ONE, QuBit.PLUS, QuBit.MINUS))
@@ -480,10 +480,10 @@ class QuGate(object):
             InvalidQuGateError: if the gate is not unitary
         """
 
-        if matrix.dtype == np.dtype('complex64'):
+        if matrix.dtype == np.dtype('complex128'):
             self._matrix = matrix
         else:
-            self._matrix = matrix.astype('complex64')
+            self._matrix = matrix.astype('complex128')
 
         shape = self._matrix.shape
         if shape[0] != shape[1]:
@@ -493,8 +493,7 @@ class QuGate(object):
             self._matrix = self._matrix * multiplier
 
         #TODO: choose and configure project wide tolerance value
-        is_unitary = np.allclose((self._matrix.H * self._matrix).real,
-            np.eye(shape[0]))
+        is_unitary = np.allclose(self._matrix.H * self._matrix, np.eye(shape[0]))
         if not is_unitary:
             raise errors.InvalidQuGateError("Gate is not unitary")
 
@@ -532,7 +531,7 @@ class QuGate(object):
         Raises:
             InvalidQuGateError: if the gate is not unitary
         """
-        matrix = np.matrix(str(matrix_str), dtype='complex64')
+        matrix = np.matrix(str(matrix_str), dtype='complex128')
         return QuGate(matrix, multiplier)
 
     @classmethod
@@ -579,9 +578,9 @@ class QuGate(object):
             InvalidQuGateError: if the result is not unitary
         """
         if qu_gates:
-            matrix = qu_gates[0].matrix
-            for i in range(1, len(qu_gates)):
-                matrix = np.kron(matrix, qu_gates[i].matrix)
+            matrix = np.matrix([1], dtype="complex128")
+            for i in range(len(qu_gates) - 1, -1, -1):
+                matrix = np.kron(qu_gates[i].matrix, matrix)
 
             return QuGate(matrix)
         else:
@@ -638,7 +637,7 @@ class QuGate(object):
     @classmethod
     def init_phase_gate(cls, k):
         phase = (2 * cmath.pi * 1j) / (2**k)
-        phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex64")
+        phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex128")
         return QuGate(phase_matrix)
 
 
