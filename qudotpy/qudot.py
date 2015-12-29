@@ -586,6 +586,7 @@ class QuGate(object):
         else:
             raise errors.InvalidQuGateError("No gates specified")
 
+
     @classmethod
     def init_control_gate(cls, qu_gate, control_qubit=1, target_qubit=2, num_qubits=2):
         """ Creates a CONTROL-U gate where qu_gate is U
@@ -636,9 +637,32 @@ class QuGate(object):
 
     @classmethod
     def init_phase_gate(cls, k):
+        """
+        Initialize a phase gate R(k)
+
+        :param k: the power of the phase exp(2pi*j / 2 ** k)
+        :return: the phase gate R(k)
+        """
         phase = (2 * cmath.pi * 1j) / (2**k)
         phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex128")
         return QuGate(phase_matrix)
+
+
+    @classmethod
+    def init_swap_gate(cls, qubit_a, qubit_b, num_qubits):
+        """
+        Initialize a swap gate between two qubits a and b
+
+        :param qubit_a: 1 based index of first qubit
+        :param qubit_b: 1 based index of second qubit
+        :param num_qubits: total number of qubits in the state
+        :return: a SWAP gate for qubits a and b
+        """
+        control_ab = QuGate.init_control_gate(X, qubit_a, qubit_b, num_qubits)
+        control_ba = QuGate.init_control_gate(X, qubit_b, qubit_a, num_qubits)
+
+        matrix = control_ab.matrix * control_ba.matrix * control_ab.matrix
+        return QuGate(matrix)
 
 
 class QuCircuit(object):
