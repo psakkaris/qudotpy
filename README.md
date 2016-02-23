@@ -4,7 +4,7 @@ QuDotPy
 A quantum computing library written in Python. Exploring quantum computing has never been easier. With QuDotPy you can 
 experiment with single-qubit operations and gates. You can build multiple-qubit states and perform measurements, and finally you can emulate quantum circuits. Our quantum circuit design makes it easy to test out circuit ideas and to step through a circuit like you would a debugger.
 
-To help you get started we have written a detailed usage tutorial that covers most aspects of QuDotPy. The tutorial can be found here: http://www.sakkaris.com/tutorials/qudotpy.html
+To help you get started we have written a detailed usage tutorial that covers most aspects of QuDotPy. The tutorial can be found here: <a href="http://www.sakkaris.com/tutorials/qudotpy.html" target="_blank">QuDotPy Tutorial</a>
 
 QuDotPy depends on Numpy. You will need to have Numpy installed before you can use QuDotPy. 
 
@@ -41,7 +41,7 @@ python setup.py install
 ```
 and qudotpy will be available on your system.
 
-That's it! For more check out our tutorial http://psakkaris.github.io/qudotpy/
+That's it! For more check out our tutorial: <a href="http://www.sakkaris.com/tutorials/qudotpy.html" target="_blank">QuDotPy Tutorial</a>
 
 Giving Back
 ===========
