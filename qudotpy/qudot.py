@@ -64,6 +64,236 @@ class QuBaseState(object):
         return not self.__eq__(other)
 
 
+class QuGate(object):
+    """A general quantum gate.
+
+    QuGate is a representation of a quantum gate using numpy matrices. We
+    check that the gate is unitary upon initialization
+
+    Attributes:
+        matrix: the matrix representation of the gate
+        dagger: the Hermitian (dagger) of the gate
+    """
+
+    @property
+    def matrix(self):
+        return self._matrix
+
+    @property
+    def dagger(self):
+        return self._matrix.H
+
+    def __eq__(self, other):
+        """Returns true if all matrix elements of other are close """
+        #TODO: choose and configure project wide tolerance value
+        equals = False
+        if hasattr(other, "matrix"):
+            if self.matrix.shape == other.matrix.shape:
+                equals = np.allclose(self.matrix, other.matrix)
+
+        return equals
+
+    def __ne__(self, other):
+        """Logically opposite of __eq__(other) """
+        return not self.__eq__(other)
+
+    def __init__(self, matrix, multiplier=0):
+        """Create a quantum gate from a numpy matrix.
+
+        Note that if the matrix dtype is not complex it will be converted
+        to a complex matrix.
+
+        Args:
+            matrix: a complex typed numpy matrix
+            multiplier: if supplied all the elements of the matrix will
+                        be multiplied by the multiplier
+
+        Raises:
+            InvalidQuGateError: if the gate is not unitary
+        """
+
+        if matrix.dtype == np.dtype('complex128'):
+            self._matrix = matrix
+        else:
+            self._matrix = matrix.astype('complex128')
+
+        shape = self._matrix.shape
+        if shape[0] != shape[1]:
+            raise errors.InvalidQuGateError("Gate is not a square matrix")
+
+        if multiplier:
+            self._matrix = self._matrix * multiplier
+
+        #TODO: choose and configure project wide tolerance value
+        is_unitary = np.allclose(self._matrix.H * self._matrix, np.eye(shape[0]))
+        if not is_unitary:
+            raise errors.InvalidQuGateError("Gate is not unitary")
+
+    def __mul__(self, other):
+        """Override multiplication operator. Supports other QuGate or number
+           Matrix multiplication does not commute so need rmul as well
+        """
+        if hasattr(other, "matrix"):
+            return QuGate(self.matrix * other.matrix)
+        else:
+            return QuGate(self.matrix, other)
+
+    def __rmul__(self, other):
+        """Override multiplication operator. Supports other QuGate or number"""
+        if hasattr(other, "matrix"):
+            return QuGate(other.matrix * self.matrix)
+        else:
+            return QuGate(self.matrix, other)
+
+    @classmethod
+    def init_from_str(cls, matrix_str, multiplier=0):
+        """Create a quantum gate from a string.
+
+        The string of the quantum gate should be rows separated by
+        semi-colons (;) and elements of a row separated by spaces
+        Example: the Pauli-X gate would be "0 1; 1 0"
+                 the Pauli-Y gate would be "0 1j; -1j 0)
+
+        Args:
+            matrix_str: the string representation of the quantum gate
+            multiplier: if supplied all the elements of the matrix will
+                        be multiplied by the multiplier
+
+        Raises:
+            InvalidQuGateError: if the gate is not unitary
+        """
+        matrix = np.matrix(str(matrix_str), dtype='complex128')
+        return QuGate(matrix, multiplier)
+
+    @classmethod
+    def init_from_mul(cls, qu_gates):
+        """ Create a quantum gate by multiplying existing gates
+
+        The multiplication will be done from left to right starting zeroth
+        element of the qu_gates list. For example:
+        qu_gates = [H, X, H] will be H * X * H
+
+        Args:
+            qu_gates: a list of QuGates to multiply
+
+        Raises:
+            InvalidQuGateError: if the result of the multiplication is
+                                not unitary or if the shape of the
+                                matrices does not match
+        """
+        if qu_gates:
+            matrix = qu_gates[0].matrix
+            for i in range(1, len(qu_gates)):
+                if matrix.shape != qu_gates[i].matrix.shape:
+                    message = "The matrices supplied have different shapes"
+                    raise errors.InvalidQuGateError(message)
+
+                matrix = matrix * qu_gates[i].matrix
+
+            return QuGate(matrix)
+        else:
+            raise errors.InvalidQuGateError("No gates specified")
+
+    @classmethod
+    def init_from_tensor_product(cls, qu_gates):
+        """ Create a quantum gate by the tensor product of other gates
+
+        The tensor product will be done from left to right starting zeroth
+        element of the qu_gates list. For example:
+        qu_gates = [H, X, H] will be H tensor X tensor H
+
+        Args:
+            qu_gates: a list of QuGates to tensor
+
+        Raises:
+            InvalidQuGateError: if the result is not unitary
+        """
+        if qu_gates:
+            matrix = np.matrix([1], dtype="complex128")
+            for i in range(len(qu_gates) - 1, -1, -1):
+                matrix = np.kron(qu_gates[i].matrix, matrix)
+
+            return QuGate(matrix)
+        else:
+            raise errors.InvalidQuGateError("No gates specified")
+
+
+    @classmethod
+    def init_control_gate(cls, qu_gate, control_qubit=1, target_qubit=2, num_qubits=2):
+        """ Creates a CONTROL-U gate where qu_gate is U
+
+        Note we use the handy formula for control-U gates in
+        Rieffel/Polak page 78:
+        |0><0| x I + |1><1| x U
+        where x is the tensor product
+
+        Args:
+            qu_gate: a QuGate which acts as your U in control-U
+            control_qubit: the index of the control bit, default is 1
+            target_qubit: the index of the target bit, default is 2
+            num_qubits: total number of qubits, default is 2
+        """
+        if num_qubits < 2:
+            raise errors.InvalidQuGateError("control gates must operate on at least 2 qubits")
+
+        if control_qubit == target_qubit:
+            raise errors.InvalidQuGateError("control qubit must be different than target qubit")
+
+        if control_qubit > num_qubits:
+            raise errors.InvalidQuGateError("control qubit cannot be greater than total number of qubits")
+
+        if target_qubit > num_qubits:
+            raise errors.InvalidQuGateError("target qubit cannot be greater than total number of qubits")
+
+        index = 1
+        # start with 1x1 matrix, a.k.a a number
+        control_mat = 1
+        target_mat = 1
+        # build control and target matrices
+        while index <= num_qubits:
+            if index == control_qubit:
+                control_mat = np.kron(control_mat, ZERO.ket * ZERO.bra)
+                target_mat = np.kron(target_mat, ONE.ket * ONE.bra)
+            elif index == target_qubit:
+                control_mat = np.kron(control_mat, np.eye(2))
+                target_mat = np.kron(target_mat, qu_gate.matrix)
+            else:
+                control_mat = np.kron(control_mat, np.eye(2))
+                target_mat = np.kron(target_mat, np.eye(2))
+
+            index += 1
+
+        control_gate = control_mat + target_mat
+        return QuGate(control_gate)
+
+    @classmethod
+    def init_phase_gate(cls, k):
+        """
+        Initialize a phase gate R(k)
+
+        :param k: the power of the phase exp(2pi*j / 2 ** k)
+        :return: the phase gate R(k)
+        """
+        phase = (2 * cmath.pi * 1j) / (2**k)
+        phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex128")
+        return QuGate(phase_matrix)
+
+    @classmethod
+    def init_swap_gate(cls, qubit_a, qubit_b, num_qubits):
+        """
+        Initialize a swap gate between two qubits a and b
+
+        :param qubit_a: 1 based index of first qubit
+        :param qubit_b: 1 based index of second qubit
+        :param num_qubits: total number of qubits in the state
+        :return: a SWAP gate for qubits a and b
+        """
+        control_ab = QuGate.init_control_gate(X, qubit_a, qubit_b, num_qubits)
+        control_ba = QuGate.init_control_gate(X, qubit_b, qubit_a, num_qubits)
+
+        matrix = control_ab.matrix * control_ba.matrix * control_ab.matrix
+        return QuGate(matrix)
+
 
 class QuBit(QuBaseState):
     """A two level quantum system.
@@ -122,6 +352,33 @@ class QuBit(QuBaseState):
     def __str__(self):
         """Dirac notation of qubit """
         return QuBit.DISPLAY_MAP[self._state_str]
+
+
+#######################################################################
+# Module constants ####################################################
+#######################################################################
+
+# constantly used (see what I did there?) qubits
+ZERO = QuBit(QuBit.ZERO)
+ONE = QuBit(QuBit.ONE)
+PLUS = QuBit(QuBit.PLUS)
+MINUS = QuBit(QuBit.MINUS)
+QUBIT_MAP = {QuBit.ZERO: ZERO, QuBit.ONE: ONE,
+             QuBit.PLUS: PLUS, QuBit.MINUS: MINUS}
+
+# if you have ever done quantum computing you know why I did this
+ROOT2 = 1/math.sqrt(2)
+
+# simple/common gates
+X = QuGate.init_from_str("0 1; 1 0")
+Y = QuGate.init_from_str("0 -1j; 1j 0")
+Z = QuGate.init_from_str("1 0; 0 -1")
+H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
+S = QuGate.init_from_str("1 0; 0 1j")
+SD = QuGate(S.dagger)
+T = QuGate.init_phase_gate(3)
+I = QuGate(np.matrix(np.eye(2)))
+CNOT = QuGate.init_control_gate(X)
 
 
 class QuState(QuBaseState):
@@ -431,238 +688,25 @@ class QuState(QuBaseState):
 
         self._state = np.asarray(final_gate.matrix * self._state)
 
+    def apply_control_gate(self, qu_gate, control_qubit, target_qubit):
+        if control_qubit <= 0 or control_qubit > self.num_qubits:
+            raise errors.InvalidQuGateError("control qubit out of range")
 
-class QuGate(object):
-    """A general quantum gate.
+        if target_qubit <= 0 or target_qubit > self.num_qubits:
+            raise errors.InvalidQuGateError("target qubit out of range")
 
-    QuGate is a representation of a quantum gate using numpy matrices. We
-    check that the gate is unitary upon initialization
+        control_qugate = QuGate.init_control_gate(qu_gate, control_qubit, target_qubit, self.num_qubits)
+        self.apply_gate(control_qugate)
 
-    Attributes:
-        matrix: the matrix representation of the gate
-        dagger: the Hermitian (dagger) of the gate
-    """
-
-    @property
-    def matrix(self):
-        return self._matrix
-
-    @property
-    def dagger(self):
-        return self._matrix.H
-
-    def __eq__(self, other):
-        """Returns true if all matrix elements of other are close """
-        #TODO: choose and configure project wide tolerance value
-        equals = False
-        if hasattr(other, "matrix"):
-            if self.matrix.shape == other.matrix.shape:
-                equals = np.allclose(self.matrix, other.matrix)
-
-        return equals
-
-    def __ne__(self, other):
-        """Logically opposite of __eq__(other) """
-        return not self.__eq__(other)
-
-    def __init__(self, matrix, multiplier=0):
-        """Create a quantum gate from a numpy matrix.
-
-        Note that if the matrix dtype is not complex it will be converted
-        to a complex matrix.
-
-        Args:
-            matrix: a complex typed numpy matrix
-            multiplier: if supplied all the elements of the matrix will
-                        be multiplied by the multiplier
-
-        Raises:
-            InvalidQuGateError: if the gate is not unitary
-        """
-
-        if matrix.dtype == np.dtype('complex128'):
-            self._matrix = matrix
-        else:
-            self._matrix = matrix.astype('complex128')
-
-        shape = self._matrix.shape
-        if shape[0] != shape[1]:
-            raise errors.InvalidQuGateError("Gate is not a square matrix")
-
-        if multiplier:
-            self._matrix = self._matrix * multiplier
-
-        #TODO: choose and configure project wide tolerance value
-        is_unitary = np.allclose(self._matrix.H * self._matrix, np.eye(shape[0]))
-        if not is_unitary:
-            raise errors.InvalidQuGateError("Gate is not unitary")
-
-
-    def __mul__(self, other):
-        """Override multiplication operator. Supports other QuGate or number
-           Matrix multiplication does not commute so need rmul as well
-        """
-        if hasattr(other, "matrix"):
-            return QuGate(self.matrix * other.matrix)
-        else:
-            return QuGate(self.matrix, other)
-
-    def __rmul__(self, other):
-        """Override multiplication operator. Supports other QuGate or number"""
-        if hasattr(other, "matrix"):
-            return QuGate(other.matrix * self.matrix)
-        else:
-            return QuGate(self.matrix, other)
-
-    @classmethod
-    def init_from_str(cls, matrix_str, multiplier=0):
-        """Create a quantum gate from a string.
-
-        The string of the quantum gate should be rows separated by
-        semi-colons (;) and elements of a row separated by spaces
-        Example: the Pauli-X gate would be "0 1; 1 0"
-                 the Pauli-Y gate would be "0 1j; -1j 0)
-
-        Args:
-            matrix_str: the string representation of the quantum gate
-            multiplier: if supplied all the elements of the matrix will
-                        be multiplied by the multiplier
-
-        Raises:
-            InvalidQuGateError: if the gate is not unitary
-        """
-        matrix = np.matrix(str(matrix_str), dtype='complex128')
-        return QuGate(matrix, multiplier)
-
-    @classmethod
-    def init_from_mul(cls, qu_gates):
-        """ Create a quantum gate by multiplying existing gates
-
-        The multiplication will be done from left to right starting zeroth
-        element of the qu_gates list. For example:
-        qu_gates = [H, X, H] will be H * X * H
-
-        Args:
-            qu_gates: a list of QuGates to multiply
-
-        Raises:
-            InvalidQuGateError: if the result of the multiplication is
-                                not unitary or if the shape of the
-                                matrices does not match
-        """
-        if qu_gates:
-            matrix = qu_gates[0].matrix
-            for i in range(1, len(qu_gates)):
-                if matrix.shape != qu_gates[i].matrix.shape:
-                    message = "The matrices supplied have different shapes"
-                    raise errors.InvalidQuGateError(message)
-
-                matrix = matrix * qu_gates[i].matrix
-
-            return QuGate(matrix)
-        else:
-            raise errors.InvalidQuGateError("No gates specified")
-
-    @classmethod
-    def init_from_tensor_product(cls, qu_gates):
-        """ Create a quantum gate by the tensor product of other gates
-
-        The tensor product will be done from left to right starting zeroth
-        element of the qu_gates list. For example:
-        qu_gates = [H, X, H] will be H tensor X tensor H
-
-        Args:
-            qu_gates: a list of QuGates to tensor
-
-        Raises:
-            InvalidQuGateError: if the result is not unitary
-        """
-        if qu_gates:
-            matrix = np.matrix([1], dtype="complex128")
-            for i in range(len(qu_gates) - 1, -1, -1):
-                matrix = np.kron(qu_gates[i].matrix, matrix)
-
-            return QuGate(matrix)
-        else:
-            raise errors.InvalidQuGateError("No gates specified")
-
-
-    @classmethod
-    def init_control_gate(cls, qu_gate, control_qubit=1, target_qubit=2, num_qubits=2):
-        """ Creates a CONTROL-U gate where qu_gate is U
-
-        Note we use the handy formula for control-U gates in
-        Rieffel/Polak page 78:
-        |0><0| x I + |1><1| x U
-        where x is the tensor product
-
-        Args:
-            qu_gate: a QuGate which acts as your U in control-U
-            control_qubit: the index of the control bit, default is 1
-            target_qubit: the index of the target bit, default is 2
-            num_qubits: total number of qubits, default is 2
-        """
-        if num_qubits < 2:
-            raise errors.InvalidQuGateError("control gates must operate on at least 2 qubits")
-
-        if control_qubit == target_qubit:
-            raise errors.InvalidQuGateError("control qubit must be different than target qubit")
-
-        if control_qubit > num_qubits:
-            raise errors.InvalidQuGateError("control qubit cannot be greater than total number of qubits")
-
-        if target_qubit > num_qubits:
-            raise errors.InvalidQuGateError("target qubit cannot be greater than total number of qubits")
-
-        index = 1
-        # start with 1x1 matrix, a.k.a a number
-        control_mat = 1
-        target_mat = 1
-        # build control and target matrices
-        while index <= num_qubits:
-            if index == control_qubit:
-                control_mat = np.kron(control_mat, ZERO.ket * ZERO.bra)
-                target_mat = np.kron(target_mat, ONE.ket * ONE.bra)
-            elif index == target_qubit:
-                control_mat = np.kron(control_mat, np.eye(2))
-                target_mat = np.kron(target_mat, qu_gate.matrix)
-            else:
-                control_mat = np.kron(control_mat, np.eye(2))
-                target_mat = np.kron(target_mat, np.eye(2))
-
-            index += 1
-
-        control_gate = control_mat + target_mat
-        return QuGate(control_gate)
-
-    @classmethod
-    def init_phase_gate(cls, k):
-        """
-        Initialize a phase gate R(k)
-
-        :param k: the power of the phase exp(2pi*j / 2 ** k)
-        :return: the phase gate R(k)
-        """
-        phase = (2 * cmath.pi * 1j) / (2**k)
-        phase_matrix = np.matrix([[1, 0], [0, cmath.exp(phase)]], dtype="complex128")
-        return QuGate(phase_matrix)
-
-
-    @classmethod
-    def init_swap_gate(cls, qubit_a, qubit_b, num_qubits):
-        """
-        Initialize a swap gate between two qubits a and b
-
-        :param qubit_a: 1 based index of first qubit
-        :param qubit_b: 1 based index of second qubit
-        :param num_qubits: total number of qubits in the state
-        :return: a SWAP gate for qubits a and b
-        """
-        control_ab = QuGate.init_control_gate(X, qubit_a, qubit_b, num_qubits)
-        control_ba = QuGate.init_control_gate(X, qubit_b, qubit_a, num_qubits)
-
-        matrix = control_ab.matrix * control_ba.matrix * control_ab.matrix
-        return QuGate(matrix)
+    def apply_toffoli_gate(self, control_qubit1, control_qubit2, target_qubit):
+        self.apply_gate(H, [target_qubit])
+        toff_cnot = QuGate.init_control_gate(X, control_qubit1, control_qubit2, self.num_qubits)
+        self.apply_control_gate(S, control_qubit2, target_qubit)
+        self.apply_gate(toff_cnot)
+        self.apply_control_gate(SD, control_qubit2, target_qubit)
+        self.apply_gate(toff_cnot)
+        self.apply_control_gate(S, control_qubit1, target_qubit)
+        self.apply_gate(H, [target_qubit])
 
 
 class QuCircuit(object):
@@ -815,10 +859,12 @@ def apply_gate(qu_gate, base_state):
     result = np.asarray(qu_gate.matrix * base_state.ket)
     return QuState.init_from_vector(result)
 
+
 def tensor_gates(left_gate, right_gate):
     """Return the tensor product of two QuGates """
     new_matrix = np.kron(left_gate.matrix, right_gate.matrix)
     return QuGate(new_matrix)
+
 
 def tensor_gate_list(gates):
     """ Return a tensor product of all gates in passed in"""
@@ -830,35 +876,11 @@ def tensor_gate_list(gates):
 
     return matrix
 
+
 def tensor_states(left_state, right_state):
     """Return the tensor product of two quantum states """
     new_state = np.kron(left_state.ket, right_state.ket)
     return QuState.init_from_vector(new_state)
 
-
-#######################################################################
-# Module constants ####################################################
-#######################################################################
-
-# constantly used (see what I did there?) qubits
-ZERO = QuBit(QuBit.ZERO)
-ONE = QuBit(QuBit.ONE)
-PLUS = QuBit(QuBit.PLUS)
-MINUS = QuBit(QuBit.MINUS)
-QUBIT_MAP = {QuBit.ZERO: ZERO, QuBit.ONE: ONE,
-             QuBit.PLUS: PLUS, QuBit.MINUS: MINUS}
-
-# if you have ever done quantum computing you know why I did this
-ROOT2 = 1/math.sqrt(2)
-
-# simple/common gates
-X = QuGate.init_from_str("0 1; 1 0")
-Y = QuGate.init_from_str("0 -1j; 1j 0")
-Z = QuGate.init_from_str("1 0; 0 -1")
-H = QuGate.init_from_str("1 1; 1 -1", ROOT2)
-S = QuGate.init_from_str("1 0; 0 1j")
-T = QuGate.init_phase_gate(3)
-I = QuGate(np.matrix(np.eye(2)))
-CNOT = QuGate.init_control_gate(X)
 
 __author__ = 'psakkaris'
