@@ -3,9 +3,8 @@
 
 Description goes here...
 
-:copyright: Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
+:copyright: Copyright (C) 2017 Perry Sakkaris <psakkaris@gmail.com>
 :license: Apache License 2.0, see LICENSE for more details.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,6 +24,7 @@ import numpy
 import qudotpy.qudot as qudot
 import qudotpy.errors as qudot_errors
 import qudotpy.utils as qudot_utils
+import qudotpy.qulib as qulib
 
 
 ONE_OVER_SQRT_2 = 1 / math.sqrt(2)
@@ -505,6 +505,18 @@ class QuDotTest(unittest.TestCase):
         result = qudot.apply_gate(qudot.H, qudot.MINUS)
         self.assertEqual(result, qudot.ONE)
 
+
+class QuLibTest(unittest.TestCase):
+
+    def test_ripple_carry(self):
+        q2 = qudot.QuState.init_from_state_list(["10"])
+        q1 = qudot.QuState.init_from_state_list(["01"])
+        r1 = qudot.QuState.init_from_state_list(["011"])
+        self.assertEqual(r1, qulib.ripple_adder(q2, q1))
+
+        q3 = qudot.QuState.init_from_state_list(["11"])
+        r2 = qudot.QuState.init_from_state_list(["110"])
+        self.assertEqual(r2, qulib.ripple_adder(q3, q3))
 
 if __name__ == "__main__":
     unittest.main()

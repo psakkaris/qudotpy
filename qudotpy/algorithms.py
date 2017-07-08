@@ -3,7 +3,7 @@
 
 Description goes here...
 
-:copyright: Copyright (C) 2014 Perry Sakkaris <psakkaris@gmail.com>
+:copyright: Copyright (C) 2017 Perry Sakkaris <psakkaris@gmail.com>
 :license: Apache License 2.0, see LICENSE for more details.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR

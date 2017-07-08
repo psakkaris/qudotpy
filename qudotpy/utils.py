@@ -76,3 +76,15 @@ def int_to_bit_str(number, dimensionality=-1):
 
     return bit_str
 
+
+def state_to_int(qu_state):
+    index = 0
+    for element in qu_state.ket:
+        if element:
+            return index
+        index += 1
+
+
+def state_to_bit_str(qu_state):
+    num = state_to_int(qu_state)
+    return int_to_bit_str(num, qu_state.num_qubits)
