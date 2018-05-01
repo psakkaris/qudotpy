@@ -29,4 +29,3 @@ class InvalidQuGateError(Exception):
 class QuCircuitError(Exception):
     pass
 
-__author__ = 'psakkaris'
