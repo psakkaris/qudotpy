@@ -22,35 +22,24 @@ from __future__ import (absolute_import, division, print_function,
 import os
 from inspect import getfile
 from inspect import currentframe
-from distutils.core import setup
-from pkgutil import walk_packages
-
+import setuptools
 import qudotpy
-
-
-def find_packages(root_path, prefix=""):
-    yield prefix
-    prefix += "."
-    for _, name, ispkg in walk_packages(root_path, prefix):
-        if ispkg:
-            yield name
-
 
 with open('README.md') as file:
     long_description = file.read()
 
 required_packages = ['numpy']
 
-setup(name='qudotpy',
-      version='0.1.0',
+setuptools.setup(name='qudotpy',
+      version='1.0.0',
       description='A quantum computing library written in Python. Can be used to emulate quantum circuits.',
       long_description=long_description,
-      keywords='quantum qbit computation emulation',
+      keywords='quantum qubit computation emulation qft shor grover',
       author='psakkaris',
       author_email='psakkaris@gmail.com',
       url='https://github.com/psakkaris/qudotpy',
       license='Apache License 2.0',
-      classifiers=['Development Status :: 2 - Pre-Alpha',
+      classifiers=['Development Status :: 5 - Production/Stable',
                    'Intended Audience :: Developers',
                    'License :: OSI Approved :: Apache Software License',
                    'Operating System :: OS Independent',
@@ -59,13 +48,13 @@ setup(name='qudotpy',
                    'Topic :: Scientific/Engineering :: Physics',
                    'Topic :: Scientific/Engineering :: Mathematics'
       ],
-      install_requires=required_packages,
-      zip_safe=True,
       platforms='any',
       provides=['qudotpy'],
       data_files=[('', ['README.md',
                         'LICENSE.txt'])],
       namespace_packages=["qudotpy"],
-      packages=list(find_packages(qudotpy.__path__, qudotpy.__name__)),
+      packages=setuptools.find_packages(exclude=['contrib', 'docs', 'tests*']),
+      install_requires=["numpy"],
+      python_requires=">=3.6, < 4",
 	  test_suite='qudotpy.test_qudotpy'
 )

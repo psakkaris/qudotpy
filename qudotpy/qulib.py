@@ -17,6 +17,7 @@ THE SOFTWARE.
 
 from qudotpy import qudot
 from qudotpy import utils
+from qudotpy import algorithms
 
 
 def carry(start, qu_state):
@@ -106,3 +107,23 @@ def ripple_adder(qu_state1, qu_state2):
     result_str = "".join(results_bit_list)
     return qudot.QuState.init_from_state_list([result_str])
 
+
+def qft_adder(qu_state1, qu_state2):
+    num_qubits = qu_state1.num_qubits
+    if qu_state1.num_qubits != qu_state2.num_qubits:
+        raise ValueError("number of qubits do not match for state")
+
+    qftn = algorithms.qft(num_qubits)
+    qu_state1.apply_gate(qftn)
+    state2 = utils.state_to_bit_str(qu_state2)
+
+    for i in range(0, num_qubits):
+        qubit = num_qubits - i
+        for b in range(1+i, num_qubits+1):
+            r = b-i
+            if state2[b-1] == "1":
+                phase_gate = qudot.QuGate.init_phase_gate(r)
+                qu_state1.apply_gate(phase_gate, [qubit])
+
+    iqftn = algorithms.inverse_qft(num_qubits)
+    qu_state1.apply_gate(iqftn)

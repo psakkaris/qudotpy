@@ -2,8 +2,11 @@
 LICENSE.txt
 README.md
 setup.py
-qudotpy\__init__.py
-qudotpy\errors.py
-qudotpy\qudot.py
-qudotpy\test_qudotpy.py
-qudotpy\utils.py
+qudotpy/__init__.py
+qudotpy/algorithms.py
+qudotpy/errors.py
+qudotpy/hamiltonians.py
+qudotpy/qudot.py
+qudotpy/qulib.py
+qudotpy/test_qudotpy.py
+qudotpy/utils.py
