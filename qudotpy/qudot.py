@@ -638,14 +638,16 @@ class QuState(QuBaseState):
         outcomes will match the probability amplitudes magnitude squared
         """
         rand = random.random()
-        possibilities_map = self.possible_measurements()
         start = 0
-        for possibility in possibilities_map:
-            probability = possibilities_map[possibility]
+        index = 0
+        for amplitude in self.ket:
+            probability = measurement_probability(amplitude[0])
             if start <= rand <= start + probability:
+                possibility = utils.int_to_dirac_str(index, self._num_qubits)
                 self._collapse(possibility)
                 return possibility
             start += probability
+            index += 1
 
     def apply_gate(self, qu_gate, qubit_list=None):
         """ Apply a QuGate to the entire state or a qubit
