@@ -565,9 +565,9 @@ class QuState(QuBaseState):
         else:
             return str(amplitude)
 
-    def _collapse(self, state_str):
+    def _collapse(self, state_int):
         """collapses the state to the specified state_str"""
-        state_index = utils.dirac_str_to_int(state_str)
+        state_index = state_int
         index = 0
         for element in self._state:
             if index == state_index:
@@ -627,7 +627,7 @@ class QuState(QuBaseState):
         else:
             return states_map
 
-    def measure(self):
+    def measure(self, format=None):
         """Measure the QuState
 
         Measurement of the state will result in one of the possible outcomes
@@ -643,9 +643,12 @@ class QuState(QuBaseState):
         for amplitude in self.ket:
             probability = measurement_probability(amplitude[0])
             if start <= rand <= start + probability:
-                possibility = utils.int_to_dirac_str(index, self._num_qubits)
+                possibility = index
                 self._collapse(possibility)
-                return possibility
+                if format == "bitstring":
+                    return utils.int_to_bit_str(possibility, self._num_qubits)
+                else:
+                    return utils.int_to_dirac_str(possibility, self._num_qubits)
             start += probability
             index += 1
 
