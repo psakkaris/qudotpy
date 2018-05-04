@@ -31,7 +31,7 @@ with open('README.md') as file:
 required_packages = ['numpy']
 
 setuptools.setup(name='qudotpy',
-      version='1.0.0',
+      version='1.1.0',
       description='A quantum computing library written in Python. Can be used to emulate quantum circuits.',
       long_description=long_description,
       keywords='quantum qubit computation emulation qft shor grover',
