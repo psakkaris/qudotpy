@@ -575,6 +575,10 @@ class QuState(QuBaseState):
 
             index += 1
 
+    def copy(self):
+        """Returns a QuState that is a copy of the underlying vector."""
+        return QuState.init_from_vector(self._state)
+
     def possible_measurements(self, qubit_index=-1):
         """Returns all possible measurements and their probability.
 

@@ -283,6 +283,14 @@ class QuStateTest(unittest.TestCase):
         test_input.apply_gate(qudot.CNOT)
         self.assertEqual(test_input, output)
 
+    def test_copy(self):
+        state1 = qudot.QuState({"00": .5, "10": .5, "01": .5, "11": -.5})
+        state2 = qudot.QuState({"00": 1/math.sqrt(2), "11": 1/math.sqrt(2)})
+
+        state1_copy = state1.copy()
+        state2_copy = state2.copy()
+        self.assertEqual(state1, state1_copy)
+        self.assertEqual(state2, state2_copy)
 
 
 class QuGateTest(unittest.TestCase):
