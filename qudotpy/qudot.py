@@ -408,7 +408,7 @@ class QuState(QuBaseState):
         """The number of qubits needed to represent the QuState"""
         return self._num_qubits
 
-    def __init__(self, state_map):
+    def __init__(self, state_map, state_vector=None):
         """Create a QuState from a map.
 
         Args:
@@ -424,7 +424,9 @@ class QuState(QuBaseState):
             InvalidQuBitError: if we encounter a string that does
                                not map to a qubit like "}"
         """
-        if state_map:
+        if state_vector is not None:
+            self._state = state_vector
+        elif state_map:
             for state_tuple in state_map.items():
                 state_bit_str = state_tuple[0]
                 amplitude = state_tuple[1]
@@ -439,14 +441,14 @@ class QuState(QuBaseState):
                     self._state += (tmp * amplitude)
                 else:
                     self._state = (tmp * amplitude)
-
-                self._num_qubits = int(math.log(self._state.size, 2))
-                self._hilbert_dimension = self._state.size
         else:
             message = ("you must provide a map with your states as keys and"
                        "and amplitudes as values. "
                        "Ex: {\"00\":1/sqrt(2), \"11\":.5/sqrt(2)}")
             raise errors.InvalidQuStateError(message)
+
+        self._num_qubits = int(math.log(self._state.size, 2))
+        self._hilbert_dimension = self._state.size
 
     @classmethod
     def init_from_state_list(cls, state_list):
@@ -577,7 +579,7 @@ class QuState(QuBaseState):
 
     def copy(self):
         """Returns a QuState that is a copy of the underlying vector."""
-        return QuState.init_from_vector(self._state)
+        return QuState(None, np.copy(self._state))
 
     def possible_measurements(self, qubit_index=-1):
         """Returns all possible measurements and their probability.
