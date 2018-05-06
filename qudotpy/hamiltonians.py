@@ -23,7 +23,8 @@ import numpy as np
 # project-level
 from qudotpy import qudot
 
-
+# its ok to use J/h/N variable names in hamiltonians
+# pylint: disable=invalid-name
 def create_ising_ham(J, h, N):
     """ Use to create an Ising Hamiltonian.
 
@@ -76,19 +77,6 @@ def solve_ground_state(H):
     """
     w, v = np.linalg.eigh(H)
     ground_state_energy = w[0]
-    ground_state = qudot.QuState.init_from_vector(np.asarray(v[:,0]))
+    ground_state = qudot.QuState.init_from_vector(np.asarray(v[:, 0]))
 
     return ground_state_energy, ground_state
-
-
-if __name__ == "__main__":
-    ham3 = create_ising_ham(1, 1000, 3)
-    energy, state = solve_ground_state(ham3)
-
-    print("energy: %s \n state: %s" % (str(energy),
-                                       state.possible_measurements()))
-
-    ham12 = create_ising_ham(1,1,12)
-    energy, state = solve_ground_state(ham12)
-    print(energy)
-    print(state.possible_measurements())

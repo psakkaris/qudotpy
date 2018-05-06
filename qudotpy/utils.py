@@ -72,19 +72,35 @@ def int_to_bit_str(number, dimensionality=-1):
     bit_str = bin(number)[2:]
     if dimensionality > 0:
         missing_leading_zeros = dimensionality - len(bit_str)
-        bit_str =  "0" * missing_leading_zeros + bit_str
+        bit_str = "0" * missing_leading_zeros + bit_str
 
     return bit_str
 
 
 def state_to_int(qu_state):
+    """Return and integer for a pure state.
+
+    This won't apply for a state in superposition. It is meant to go from
+    |000> -> 0 or |010> -> 2 etc.
+
+    Args:
+        qu_state: the quantum state
+    """
     index = 0
     for element in qu_state.ket:
         if element:
             return index
         index += 1
 
+    return None
+
 
 def state_to_bit_str(qu_state):
+    """Return the bit string for a pure state.
+
+    This won't apply for a state in superposition.
+    Args:
+        qu_state: the quantum state
+    """
     num = state_to_int(qu_state)
     return int_to_bit_str(num, qu_state.num_qubits)

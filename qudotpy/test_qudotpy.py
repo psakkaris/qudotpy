@@ -55,9 +55,9 @@ class QuBitTest(unittest.TestCase):
 
     def test_init(self):
         self.assertRaises(qudot_errors.InvalidQuBitError,
-                          lambda : qudot.QuBit("5"))
+                          lambda: qudot.QuBit("5"))
         self.assertRaises(qudot_errors.InvalidQuBitError,
-                          lambda : qudot.QuBit(4))
+                          lambda: qudot.QuBit(4))
 
     def test_str(self):
         self.assertEqual(str(self.zero), "|0>")
@@ -67,8 +67,8 @@ class QuBitTest(unittest.TestCase):
 
     def test_state(self):
         amplitude = 1 / math.sqrt(2)
-        tmp_zero = get_column_vector([1,0])
-        tmp_one = get_column_vector([0,1])
+        tmp_zero = get_column_vector([1, 0])
+        tmp_one = get_column_vector([0, 1])
         tmp_plus = get_column_vector([amplitude, amplitude])
         tmp_minus = get_column_vector([amplitude, -amplitude])
 
@@ -79,8 +79,8 @@ class QuBitTest(unittest.TestCase):
 
     def test_adjoint(self):
         amplitude = 1 / math.sqrt(2)
-        tmp_zero = get_row_vector([1,0])
-        tmp_one = get_row_vector([0,1])
+        tmp_zero = get_row_vector([1, 0])
+        tmp_one = get_row_vector([0, 1])
         tmp_plus = get_row_vector([amplitude, amplitude])
         tmp_minus = get_row_vector([amplitude, -amplitude])
 
@@ -119,14 +119,11 @@ class QuStateTest(unittest.TestCase):
         self.test_amplitude = amplitude
 
         # |0000>, |0010>, |0100>, |0110>
-        self.base_vector = [.5, 0, .5, 0, .5, 0, .5j, 0,
-                              0, 0, 0, 0, 0, 0, 0, 0]
+        self.base_vector = [.5, 0, .5, 0, .5, 0, .5j, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        self.base_vector_real = [.5, 0, .5, 0, .5, 0, .5, 0,
-                                 0, 0, 0, 0, 0, 0, 0, 0]
+        self.base_vector_real = [.5, 0, .5, 0, .5, 0, .5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        self.adj_vector = [.5, 0, .5, 0, .5, 0, -.5j, 0,
-                           0, 0, 0, 0, 0, 0, 0, 0]
+        self.adj_vector = [.5, 0, .5, 0, .5, 0, -.5j, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     def tearDown(self):
         del self.test_state
@@ -136,9 +133,9 @@ class QuStateTest(unittest.TestCase):
 
     def test_init_from_map(self):
         self.assertRaises(qudot_errors.InvalidQuStateError,
-                          lambda : qudot.QuState(None))
+                          lambda: qudot.QuState(None))
         self.assertRaises(qudot_errors.InvalidQuBitError,
-                          lambda : qudot.QuState({"}": 1}))
+                          lambda: qudot.QuState({"}": 1}))
 
         # make map with even states in 4D Hilbert space
         qubit_map = {}
@@ -155,14 +152,14 @@ class QuStateTest(unittest.TestCase):
         row_vector = get_row_vector(self.adj_vector)
         vectors_equal(column_vector, qu_state.ket)
         vectors_equal(row_vector, qu_state.bra)
-        self.assertTrue(4 == qu_state.num_qubits)
-        self.assertTrue(2**4 == qu_state.hilbert_dimension)
+        self.assertTrue(qu_state.num_qubits == 4)
+        self.assertTrue(qu_state.hilbert_dimension == 2**4)
 
     def test_init_from_list(self):
         self.assertRaises(qudot_errors.InvalidQuStateError,
-                          lambda : qudot.QuState([]))
+                          lambda: qudot.QuState([]))
         self.assertRaises(qudot_errors.InvalidQuBitError,
-                          lambda : qudot.QuState.init_from_state_list(["{"]))
+                          lambda: qudot.QuState.init_from_state_list(["{"]))
 
         qu_state_lst = ["0000", "0010", "0100", "0110"]
         qu_state = qudot.QuState.init_from_state_list(qu_state_lst)
@@ -170,17 +167,17 @@ class QuStateTest(unittest.TestCase):
         row_vector = get_row_vector(self.base_vector_real)
         vectors_equal(column_vector, qu_state.ket)
         vectors_equal(row_vector, qu_state.bra)
-        self.assertTrue(4 == qu_state.num_qubits)
-        self.assertTrue(2**4 == qu_state.hilbert_dimension)
+        self.assertTrue(qu_state.num_qubits == 4)
+        self.assertTrue(qu_state.hilbert_dimension == 2**4)
 
     def test_init_superposition(self):
         qu_state = qudot.QuState.init_superposition(4)
-        self.assertTrue(2**4 == qu_state.hilbert_dimension)
-        self.assertTrue(4 == qu_state.num_qubits)
+        self.assertTrue(qu_state.hilbert_dimension == 2**4)
+        self.assertTrue(qu_state.num_qubits == 4)
 
         amplitude = .25
         vector = []
-        for i in range(0, 16):
+        for _ in range(0, 16):
             vector.append(amplitude)
 
         column_vector = get_column_vector(vector)
@@ -194,11 +191,11 @@ class QuStateTest(unittest.TestCase):
         row_vector = get_row_vector(vector)
         # must be column vector
         self.assertRaises(ValueError,
-                          lambda : qudot.QuState.init_from_vector(row_vector))
+                          lambda: qudot.QuState.init_from_vector(row_vector))
         qu_state = qudot.QuState.init_from_vector(column_vector)
         self.assertTrue(qu_state.num_qubits == 2)
         self.assertTrue(qu_state.hilbert_dimension == 2**2)
-        vectors_equal(column_vector,qu_state.ket)
+        vectors_equal(column_vector, qu_state.ket)
         vectors_equal(row_vector, qu_state.bra)
 
     def test_init_zeros(self):
@@ -312,10 +309,10 @@ class QuGateTest(unittest.TestCase):
             "1 1; 1 -1", 1/math.sqrt(2)))
         # not square matrix
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_from_str("1 0 0; 0 1 0"))
+                          lambda: qudot.QuGate.init_from_str("1 0 0; 0 1 0"))
         # not unitary
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_from_str("1 1; 1 -1"))
+                          lambda: qudot.QuGate.init_from_str("1 1; 1 -1"))
 
     def test_init_from_multiplication(self):
         # use well known quantum circuit identities for test
@@ -331,11 +328,11 @@ class QuGateTest(unittest.TestCase):
         self.assertEqual(minus_Y, qudot.QuGate.init_from_mul(qu_gates))
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_from_mul([]))
+                          lambda: qudot.QuGate.init_from_mul([]))
 
         qu_gates = [qudot.X, qudot.CNOT]
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_from_mul(qu_gates))
+                          lambda: qudot.QuGate.init_from_mul(qu_gates))
 
     def test_mul(self):
         self.assertEqual(qudot.Z, qudot.H * qudot.X * qudot.H)
@@ -392,16 +389,20 @@ class QuGateTest(unittest.TestCase):
         self.assertEqual(cy, cy_manual)
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=1, target_qubit=2, num_qubits=1))
+                          lambda: qudot.QuGate.init_control_gate(qudot.X, control_qubit=1,
+                                                                 target_qubit=2, num_qubits=1))
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=1, target_qubit=1, num_qubits=3))
+                          lambda: qudot.QuGate.init_control_gate(qudot.X, control_qubit=1,
+                                                                 target_qubit=1, num_qubits=3))
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=4, target_qubit=1, num_qubits=2))
+                          lambda: qudot.QuGate.init_control_gate(qudot.X, control_qubit=4,
+                                                                 target_qubit=1, num_qubits=2))
 
         self.assertRaises(qudot_errors.InvalidQuGateError,
-                          lambda : qudot.QuGate.init_control_gate(qudot.X, control_qubit=4, target_qubit=5, num_qubits=3))
+                          lambda: qudot.QuGate.init_control_gate(qudot.X, control_qubit=4,
+                                                                 target_qubit=5, num_qubits=3))
 
     def test_init_phase_gate(self):
         r0 = qudot.QuGate.init_phase_gate(0)

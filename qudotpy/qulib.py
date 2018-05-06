@@ -21,11 +21,11 @@ from qudotpy import algorithms
 
 
 def carry(start, qu_state):
-    """
-    Quantum carry operation
-    :param start: The starting qubit to apply the carry
-    :param qu_state: a QuState
-    :return: altered QuState
+    """Quantum carry operation, returns new state.
+
+    Args:
+        start: The starting qubit to apply the carry
+        qu_state: a QuState
     """
     qu_state.apply_toffoli_gate(start + 1, start + 2, start + 3)
     qu_state.apply_control_gate(qudot.X, start + 1, start + 2)
@@ -33,22 +33,24 @@ def carry(start, qu_state):
 
 
 def qsum(start, qu_state):
-    """
-    Quanutm sum operation
-    :param start: The starting qubit to apply the sum
-    :param qu_state: a QuState
-    :return: altered QuState
+    """Quanutm sum operation, returns new state.
+
+    Args:
+        start: The starting qubit to apply the sum
+        qu_state: a QuState
     """
     qu_state.apply_control_gate(qudot.X, start + 1, start + 2)
     qu_state.apply_control_gate(qudot.X, start, start + 2)
 
 
 def rev_carry(start, qu_state):
-    """
-    The reverse carry operation, or the conjugate. Undoes what carry method does
-    :param start: The starting qubit to apply the reverse carry
-    :param qu_state: altered QuState
-    :return:
+    """The reverse carry operation, or the conjugate.
+
+    Undoes what carry method does to the state
+
+    Args:
+        start: The starting qubit to apply the reverse carry
+        qu_state: altered QuState
     """
     qu_state.apply_toffoli_gate(start, start + 2, start + 3)
     qu_state.apply_control_gate(qudot.X, start + 1, start + 2)
@@ -56,12 +58,14 @@ def rev_carry(start, qu_state):
 
 
 def ripple_adder(qu_state1, qu_state2):
-    """
-    Adds the two QuStates and returns their sum using ripple_carry algorithm. The two states must have the same
-    number of qubits. Returns a new QuState that is their sum.
-    :param qu_state1: QuState
-    :param qu_state2: QuState
-    :return:  qu_state1 + qu_state2
+    """Adds the two QuStates and returns their sum using ripple_carry algorithm.
+
+    The two states must have the same number of qubits.
+    Returns a new QuState that is their sum.
+
+    Args:
+        qu_state1: QuState
+        qu_state2: QuState
     """
     if qu_state1.num_qubits != qu_state2.num_qubits:
         raise ValueError("number of qubits do not match for state")
@@ -109,6 +113,12 @@ def ripple_adder(qu_state1, qu_state2):
 
 
 def qft_adder(qu_state1, qu_state2):
+    """Add using the qft add algorithm.
+
+    Args:
+        qu_state1: the first quantum state
+        qu_state2: the second quantum state
+    """
     num_qubits = qu_state1.num_qubits
     if qu_state1.num_qubits != qu_state2.num_qubits:
         raise ValueError("number of qubits do not match for state")
@@ -119,10 +129,10 @@ def qft_adder(qu_state1, qu_state2):
 
     for i in range(0, num_qubits):
         qubit = num_qubits - i
-        for b in range(1+i, num_qubits+1):
-            r = b-i
-            if state2[b-1] == "1":
-                phase_gate = qudot.QuGate.init_phase_gate(r)
+        for bit in range(1+i, num_qubits+1):
+            ripple = bit-i
+            if state2[bit-1] == "1":
+                phase_gate = qudot.QuGate.init_phase_gate(ripple)
                 qu_state1.apply_gate(phase_gate, [qubit])
 
     iqftn = algorithms.inverse_qft(num_qubits)

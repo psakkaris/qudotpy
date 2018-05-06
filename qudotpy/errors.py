@@ -18,14 +18,13 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 class InvalidQuBitError(Exception):
+    """Custom error for invalid qubits."""
     pass
 
 class InvalidQuStateError(Exception):
+    """Custom error for invalid quantum states."""
     pass
 
 class InvalidQuGateError(Exception):
+    """Custom error for invalid gates."""
     pass
-
-class QuCircuitError(Exception):
-    pass
-

@@ -22,45 +22,55 @@ from qudotpy import qudot
 
 
 def qft(num_qubits):
+    """Implementation of the quantum fourier transform.
+
+    Args:
+        num_qubits: the number of qubits the qft will apply to
+    """
     h_list = [qudot.I for x in range(0, num_qubits)]
     qft_matrices = []
-    for q in range(1, num_qubits+1):
+    for qubit in range(1, num_qubits+1):
         sub_matrices = []
         # create the Haddamard part
-        h_list[q-1] = qudot.H
+        h_list[qubit-1] = qudot.H
         haddamard = qudot.QuGate.init_from_tensor_product(h_list)
         sub_matrices.insert(0, haddamard)
-        h_list[q-1] = qudot.I
+        h_list[qubit-1] = qudot.I
 
         # create the control rotations
-        i = q + 1
-        r = 2
+        i = qubit + 1
+        phase = 2
         while i <= num_qubits:
-            phase_gate = qudot.QuGate.init_phase_gate(r)
-            control = qudot.QuGate.init_control_gate(phase_gate, i, q, num_qubits)
+            phase_gate = qudot.QuGate.init_phase_gate(phase)
+            control = qudot.QuGate.init_control_gate(phase_gate, i, qubit, num_qubits)
             sub_matrices.insert(0, control)
             i += 1
-            r += 1
+            phase += 1
 
         qft_matrices.insert(0, qudot.QuGate.init_from_mul(sub_matrices))
 
-    for q in range(1, int(num_qubits / 2) + 1):
-        swap = qudot.QuGate.init_swap_gate(q, num_qubits - q + 1, num_qubits)
+    for qubit in range(1, int(num_qubits / 2) + 1):
+        swap = qudot.QuGate.init_swap_gate(qubit, num_qubits - qubit + 1, num_qubits)
         qft_matrices.insert(0, swap)
 
     return qudot.QuGate.init_from_mul(qft_matrices)
 
 
 def inverse_qft(num_qubits):
+    """Implementation of the inverse quanutm fourier transform.
+
+    Args:
+        num_qubits: the number of qubits the iqft will apply to.
+    """
     qft_gate = qft(num_qubits)
     return qudot.QuGate(qft_gate.dagger)
 
 
 if __name__ == "__main__":
-    qft3 = qft(3)
-    rows = qft3.matrix.shape[0]
-    for row in range(0, rows):
+    QFT3 = qft(3)
+    ROWS = QFT3.matrix.shape[0]
+    for row in range(0, ROWS):
         row_txt = ""
-        for col in range(0, rows):
-            row_txt += "%s\t" % qft3.matrix.item((row, col))
+        for col in range(0, ROWS):
+            row_txt += "%s\t" % QFT3.matrix.item((row, col))
         print(row_txt + "\n")
