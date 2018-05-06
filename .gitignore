@@ -56,5 +56,8 @@ docs/build/
 # PyCharm Cruft
 .idea/
 
+# vscode stuff
+.vscode/
+
 # Python Notebook Stuff
 .ipynb*
