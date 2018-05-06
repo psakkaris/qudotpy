@@ -18,6 +18,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 # standard library
+import abc
 import math
 import cmath
 import random
@@ -30,7 +31,7 @@ from qudotpy import utils
 from qudotpy import errors
 
 
-class QuBaseState(object):
+class QuBaseState(abc.ABC):
     """Common properties of quantum states.
 
     This class is not intended to be used directly, but to be
@@ -49,6 +50,10 @@ class QuBaseState(object):
     def bra(self):
         """The Hermitian Conjugate of the state a.k.a row vector"""
         return np.conjugate(self._state.T)
+
+    @abc.abstractmethod
+    def __init__(self, state):
+        self._state = state
 
     def __eq__(self, other):
         """Considered equal if all elements of a state are within threshold"""
@@ -78,10 +83,12 @@ class QuGate(object):
 
     @property
     def matrix(self):
+        """Return the underlying matrix."""
         return self._matrix
 
     @property
     def dagger(self):
+        """Return the Hermitian of the matrix."""
         return self._matrix.H
 
     def __eq__(self, other):
@@ -136,15 +143,15 @@ class QuGate(object):
         """
         if hasattr(other, "matrix"):
             return QuGate(self.matrix * other.matrix)
-        else:
-            return QuGate(self.matrix, other)
+
+        return QuGate(self.matrix, other)
 
     def __rmul__(self, other):
         """Override multiplication operator. Supports other QuGate or number"""
         if hasattr(other, "matrix"):
             return QuGate(other.matrix * self.matrix)
-        else:
-            return QuGate(self.matrix, other)
+
+        return QuGate(self.matrix, other)
 
     @classmethod
     def init_from_str(cls, matrix_str, multiplier=0):
@@ -235,16 +242,20 @@ class QuGate(object):
             num_qubits: total number of qubits, default is 2
         """
         if num_qubits < 2:
-            raise errors.InvalidQuGateError("control gates must operate on at least 2 qubits")
+            msg = "control gates must operate on at least 2 qubits"
+            raise errors.InvalidQuGateError(msg)
 
         if control_qubit == target_qubit:
-            raise errors.InvalidQuGateError("control qubit must be different than target qubit")
+            msg = "control qubit must be different than target qubit"
+            raise errors.InvalidQuGateError(msg)
 
         if control_qubit > num_qubits:
-            raise errors.InvalidQuGateError("control qubit cannot be greater than total number of qubits")
+            msg = "control qubit cannot be greater than total number of qubits"
+            raise errors.InvalidQuGateError(msg)
 
         if target_qubit > num_qubits:
-            raise errors.InvalidQuGateError("target qubit cannot be greater than total number of qubits")
+            msg = "target qubit cannot be greater than total number of qubits"
+            raise errors.InvalidQuGateError(msg)
 
         index = 1
         # start with 1x1 matrix, a.k.a a number
@@ -336,18 +347,19 @@ class QuBit(QuBaseState):
             InvalidQubitError: didn't recognize the qubit string
         """
         if qubit_str == QuBit.ZERO:
-            self._state = np.array([[1], [0]], dtype="complex128")
+            state = np.array([[1], [0]], dtype="complex128")
         elif qubit_str == QuBit.ONE:
-            self._state = np.array([[0], [1]], dtype="complex128")
+            state = np.array([[0], [1]], dtype="complex128")
         elif qubit_str == QuBit.PLUS:
-            self._state = np.array([[1], [1]], dtype="complex128") * 1/np.sqrt(2)
+            state = np.array([[1], [1]], dtype="complex128") * 1/np.sqrt(2)
         elif qubit_str == QuBit.MINUS:
-            self._state = np.array([[1], [-1]], dtype="complex128") * 1/np.sqrt(2)
+            state = np.array([[1], [-1]], dtype="complex128") * 1/np.sqrt(2)
         else:
             message = ("A qubit must be one of the strings %s, %s, %s or %s"
                        % (QuBit.ZERO, QuBit.ONE, QuBit.PLUS, QuBit.MINUS))
             raise errors.InvalidQuBitError(message)
 
+        super().__init__(state)
         self._state_str = qubit_str
 
     def __str__(self):
@@ -425,7 +437,7 @@ class QuState(QuBaseState):
                                not map to a qubit like "}"
         """
         if state_vector is not None:
-            self._state = state_vector
+            super().__init__(state_vector)
         elif state_map:
             for state_tuple in state_map.items():
                 state_bit_str = state_tuple[0]
@@ -437,10 +449,11 @@ class QuState(QuBaseState):
                     else:
                         tmp = np.kron(QuBit(bit).ket, tmp)
 
-                if hasattr(self, "_state"):
-                    self._state += (tmp * amplitude)
+                if state_vector is not None:
+                    state_vector += (tmp * amplitude)
                 else:
-                    self._state = (tmp * amplitude)
+                    state_vector = (tmp * amplitude)
+            super().__init__(state_vector)
         else:
             message = ("you must provide a map with your states as keys and"
                        "and amplitudes as values. "
@@ -519,9 +532,9 @@ class QuState(QuBaseState):
         vector_len = len(vector)
         if vector_len % 2:
             message = ("Vector representations of quantum states must be a "
-                      "power of 2. Your vector has length %s" % str(vector_len))
+                       "power of 2. Your vector has length %s" % str(vector_len))
             raise ValueError(message)
-        if len(vector):
+        if vector.any():
             dimensionality = int(math.log(len(vector), 2))
             i = 0
             for element in vector:
@@ -560,10 +573,10 @@ class QuState(QuBaseState):
     def _amplitude_str(self, amplitude):
         if amplitude.real and not amplitude.imag:
             return str(amplitude.real)
-        elif amplitude.imag and not amplitude.real:
+        if amplitude.imag and not amplitude.real:
             return str(amplitude.imag)
-        else:
-            return str(amplitude)
+
+        return str(amplitude)
 
     def _collapse(self, state_int):
         """collapses the state to the specified state_str"""
@@ -627,7 +640,7 @@ class QuState(QuBaseState):
         else:
             return states_map
 
-    def measure(self, format=None):
+    def measure(self, qustate_format=None):
         """Measure the QuState
 
         Measurement of the state will result in one of the possible outcomes
@@ -645,12 +658,14 @@ class QuState(QuBaseState):
             if start <= rand <= start + probability:
                 possibility = index
                 self._collapse(possibility)
-                if format == "bitstring":
+                if qustate_format == "bitstring":
                     return utils.int_to_bit_str(possibility, self._num_qubits)
-                else:
-                    return utils.int_to_dirac_str(possibility, self._num_qubits)
+
+                return utils.int_to_dirac_str(possibility, self._num_qubits)
             start += probability
             index += 1
+
+        return None
 
     def apply_gate(self, qu_gate, qubit_list=None):
         """ Apply a QuGate to the entire state or a qubit
@@ -673,7 +688,8 @@ class QuState(QuBaseState):
         Raise:
             ValueError: if you try to apply to an out of bounds qubit index
         """
-        if not qubit_list: qubit_list = []
+        if not qubit_list:
+            qubit_list = []
         dimension = qu_gate.matrix.shape[0]
         qu_gate_list = []
         if qubit_list:
@@ -701,16 +717,34 @@ class QuState(QuBaseState):
         self._state = np.asarray(final_gate.matrix * self._state)
 
     def apply_control_gate(self, qu_gate, control_qubit, target_qubit):
+        """Apply a control gate to the state.
+
+        Args:
+            qu_gate: the U gate in a control-U operation
+            control_qubit: the control qubit
+            target_qubit: the target qubit
+
+        Raises:
+            InvalidQuGateError: if control or target qubits are out of range
+        """
         if control_qubit <= 0 or control_qubit > self.num_qubits:
             raise errors.InvalidQuGateError("control qubit out of range")
 
         if target_qubit <= 0 or target_qubit > self.num_qubits:
             raise errors.InvalidQuGateError("target qubit out of range")
 
-        control_qugate = QuGate.init_control_gate(qu_gate, control_qubit, target_qubit, self.num_qubits)
+        control_qugate = QuGate.init_control_gate(qu_gate, control_qubit, target_qubit,
+                                                  self.num_qubits)
         self.apply_gate(control_qugate)
 
     def apply_toffoli_gate(self, control_qubit1, control_qubit2, target_qubit):
+        """Apply a Toffoli gate to the state.
+
+        Args:
+            control_qubit1: the first control qubit
+            control_qubit2: the second control qubit
+            target_qubit: the target qubit
+        """
         self.apply_gate(H, [target_qubit])
         toff_cnot = QuGate.init_control_gate(X, control_qubit1, control_qubit2, self.num_qubits)
         self.apply_control_gate(S, control_qubit2, target_qubit)
@@ -736,8 +770,8 @@ def measurement_probability(amplitude):
     """
     if amplitude:
         return (np.conjugate(amplitude) * amplitude).real
-    else:
-        return 0
+
+    return 0
 
 
 def apply_gate(qu_gate, base_state):
