@@ -754,6 +754,16 @@ class QuState(QuBaseState):
         self.apply_control_gate(S, control_qubit1, target_qubit)
         self.apply_gate(H, [target_qubit])
 
+    def apply_phase_gate(self, phase, qubits=None):
+        """Apply a phase gate to the state or on specified qubits.
+
+        Args:
+            phase: the k in an R(k) gate
+            qubits: the list of qubits to apply to, None for the whole state
+        """
+        phase_gate = QuGate.init_phase_gate(phase)
+        self.apply_gate(phase_gate, qubits)
+
 
 #######################################################################
 
