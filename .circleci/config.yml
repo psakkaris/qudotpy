@@ -32,7 +32,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            pip install pylint3
+            sudo apt-get install pylint
 
       - save_cache:
           paths:
@@ -52,7 +52,7 @@ jobs:
       - run:
           name: pylint check
           command: |
-            pylint3 qudotpy/qudotpy.py
+            pylint qudotpy/qudotpy.py
 
       - store_artifacts:
           path: test-reports
