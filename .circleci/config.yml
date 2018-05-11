@@ -32,6 +32,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+            pip install pylint3
 
       - save_cache:
           paths:
@@ -47,6 +48,11 @@ jobs:
           command: |
             . venv/bin/activate
             python -m unittest qudotpy.test_qudotpy
+
+      - run:
+          name: pylint check
+          command: |
+            pylint3 qudotpy/qudotpy.py
 
       - store_artifacts:
           path: test-reports
