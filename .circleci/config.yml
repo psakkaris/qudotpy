@@ -52,7 +52,7 @@ jobs:
       - run:
           name: pylint check
           command: |
-            pylint qudotpy/qudot.py
+            pylint3 qudotpy/qudot.py
 
       - store_artifacts:
           path: test-reports
