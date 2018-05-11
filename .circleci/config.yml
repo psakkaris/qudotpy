@@ -49,10 +49,10 @@ jobs:
             . venv/bin/activate
             python -m unittest qudotpy.test_qudotpy
 
-      - run:
-          name: pylint check
-          command: |
-            pylint qudotpy/qudot.py
+      # - run:
+      #    name: pylint check
+      #    command: |
+      #      pylint qudotpy/qudot.py
 
       - store_artifacts:
           path: test-reports
