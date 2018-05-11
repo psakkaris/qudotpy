@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/psakkaris/qudotpy.svg?style=svg)](https://circleci.com/gh/psakkaris/qudotpy)
+[![CircleCI](https://circleci.com/gh/psakkaris/qudotpy.svg?style=svg)]
 
 QuDotPy
 =======
