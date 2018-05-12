@@ -574,7 +574,7 @@ class QuState(QuBaseState):
         if amplitude.real and not amplitude.imag:
             return str(amplitude.real)
         if amplitude.imag and not amplitude.real:
-            return str(amplitude.imag)
+            return str(amplitude.imag) + "j"
 
         return str(amplitude)
 
