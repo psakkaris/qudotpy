@@ -764,6 +764,14 @@ class QuState(QuBaseState):
         phase_gate = QuGate.init_phase_gate(phase)
         self.apply_gate(phase_gate, qubits)
 
+    def swap(self):
+        """Apply a swap to the entire state"""
+
+        mid_point = int(self.num_qubits / 2)
+        for i in range(0, mid_point):
+            swap_ab = QuGate.init_swap_gate(i+1, self.num_qubits - i, self.num_qubits)
+            self.apply_gate(swap_ab)
+
 
 #######################################################################
 
