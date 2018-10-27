@@ -112,20 +112,18 @@ def ripple_adder(qu_state1, qu_state2):
     return qudot.QuState.init_from_state_list([result_str])
 
 
-def qft_adder(qu_state1, qu_state2):
+def qft_adder(qu_state1, value):
     """Add using the qft add algorithm.
 
     Args:
         qu_state1: the first quantum state
-        qu_state2: the second quantum state
+        value: a classical value bit string
     """
     num_qubits = qu_state1.num_qubits
-    if qu_state1.num_qubits != qu_state2.num_qubits:
-        raise ValueError("number of qubits do not match for state")
 
     qftn = algorithms.qft(num_qubits)
     qu_state1.apply_gate(qftn)
-    state2 = utils.state_to_bit_str(qu_state2)
+    state2 = utils.int_to_bit_str(value, num_qubits)
 
     for i in range(0, num_qubits):
         qubit = num_qubits - i
